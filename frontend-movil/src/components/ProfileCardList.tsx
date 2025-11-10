@@ -37,12 +37,14 @@ export default function ProfileCardList({ Profiles }: { Profiles: Profile[] }) {
                         </Text>
                     </View>
 
-                    <FlatList
-                        horizontal
-                        data={item.skills}
-                        renderItem={({ item }) => <Text style={styles.skill}>{item}</Text>}
-                        keyExtractor={(skill, index) => index.toString()}
-                    />
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+
+                        {item.skills.map((skill: string, index: number) => (
+                            <Text style={styles.skill} key={index}>{skill}</Text>
+                        ))}
+                    </View>
+
+
                 </View>
             </View>
 
@@ -64,15 +66,14 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 15,
         marginBottom: 30,
-        marginHorizontal: 7,
+        // marginHorizontal: 30,
+        marginLeft: 30,
+        marginRight: 30,
         // Sombra para iOS
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 6,
-        // Sombra para Android
-        elevation: 5,
-        width: '100%',
     },
     cardHeader: {
         flexDirection: 'row',
@@ -90,24 +91,22 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 18,
         paddingBottom: 5
-
-
     },
     review: {
         fontSize: 16,
         paddingBottom: 6,
-        marginHorizontal:5
+        marginHorizontal: 5
     },
     reviewContainer: {
-        display: 'flex', 
-        flexDirection: 'row', 
+        display: 'flex',
+        flexDirection: 'row',
         alignItems: 'center'
     },
     skill: {
-        // height: 29,
         borderRadius: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
+        // width: 150,
+        // justifyContent: 'center',
+        // alignItems: 'center',
         paddingVertical: 6,
         paddingHorizontal: 12,
         color: 'white',
