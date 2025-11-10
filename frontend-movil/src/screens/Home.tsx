@@ -2,7 +2,9 @@ import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpa
 import Header from "../navigation/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileCardList from "../components/ProfileCardList";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { API_URL } from "../types/navigation";
+import { Profile } from "../types/profile";
 
 const skills = [
     { id: '1', name: 'Plomería', image: require('../../assets/skills/Plomeria.png') },
@@ -42,80 +44,89 @@ const SkillsGrid = ({ skill, onPress }: any) => {
 
 export default function Home() {
 
-    const profiles = [
-        {
-            id_worker: 1,
-            fullName: "Benjamín Barona",
-            pfpFileName: "Benjamin.jpg",
-            gallery: [
-                "1WorkerGallery.jpg",
-                "1WorkerGallery2.jpg"
-            ],
-            rating: "5.0",
-            totalReviews: 1,
-            skills: [
-                "Plomería"
-            ],
-            score: "11.000000000"
-        },
-        {
-            id_worker: 2,
-            fullName: "Roberto Castillo",
-            pfpFileName: "Roberto.jpg",
-            gallery: [
-                "2WorkerGallery.jpg"
-            ],
-            rating: "5.0",
-            totalReviews: 1,
-            skills: [
-                "Plomería"
-            ],
-            score: "11.000000000"
-        },
-        {
-            id_worker: 6,
-            fullName: "Jerónimo Gálvez",
-            pfpFileName: "Jeronimo.jpg",
-            gallery: [
-                "6WorkerGallery.jpg",
-                "6WorkerGallery2.jpg"
-            ],
-            rating: "5.0",
-            totalReviews: 1,
-            skills: [
-                "Electricidad",
-                "Construcción"
-            ],
-            score: "11.000000000"
-        }
-    ]
+    const URL = API_URL + '/user/SearchSkill/all';
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [profiles, setProfiles] = useState<Profile[]>([]);
+    const [error, setError] = useState<string | null>(null);
+
+useEffect(() => {
+        const loadProfiles = async () => {
+            try {
+                setError(null);
+                const response = await fetch('http://localhost:3003/user/SearchSkill/null');
+
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: no se pudo conectar con la api`);
+                }
+
+                const responsejson: any = await response.json();
+                if (!responsejson.success) {
+                    setError('¡Vaya! Ocurrió un error')
+                }
+
+                setProfiles(responsejson.data.slice(0, 5));
+            } catch (err: any) {
+                console.log(err.message);
+                setError('¡Vaya! Ocurrió un error')
+            }
+        };
+
+        loadProfiles();
+    }, []);
+
+    // const profiles = [
+    //     {
+    //         id_worker: 1,
+    //         fullName: "Benjamín Barona",
+    //         pfpFileName: "Benjamin.jpg",
+    //         gallery: [
+    //             "1WorkerGallery.jpg",
+    //             "1WorkerGallery2.jpg"
+    //         ],
+    //         rating: "5.0",
+    //         totalReviews: 1,
+    //         skills: [
+    //             "Plomería"
+    //         ],
+    //         score: "11.000000000"
+    //     },
+    //     {
+    //         id_worker: 2,
+    //         fullName: "Roberto Castillo",
+    //         pfpFileName: "Roberto.jpg",
+    //         gallery: [
+    //             "2WorkerGallery.jpg"
+    //         ],
+    //         rating: "5.0",
+    //         totalReviews: 1,
+    //         skills: [
+    //             "Plomería"
+    //         ],
+    //         score: "11.000000000"
+    //     },
+    //     {
+    //         id_worker: 6,
+    //         fullName: "Jerónimo Gálvez",
+    //         pfpFileName: "Jeronimo.jpg",
+    //         gallery: [
+    //             "6WorkerGallery.jpg",
+    //             "6WorkerGallery2.jpg"
+    //         ],
+    //         rating: "5.0",
+    //         totalReviews: 1,
+    //         skills: [
+    //             "Electricidad",
+    //             "Construcción"
+    //         ],
+    //         score: "11.000000000"
+    //     }
+    // ]
 
     // para simular la selección de skill
     const handleSkillSelection = (categoryName: string) => {
         console.log(`Skill seleccionada: ${categoryName}`);
     };
-
-    // useEffect(() => {
-    //     const loadProfiles = async () => {
-    //         try {
-    //             setError(null);
-    //             const response = await fetch(URL);
-
-    //             if (!response.ok) {
-    //                 throw new Error(Error ${response.status}: no se pudo conectar con la api);
-    //             }
-
-    //             const dataTours: Tour[] = await response.json();
-    //             setTours(dataTours.data);
-    //         } catch (err: any) {
-    //             setError('Error al cargar los tours: ' + err.message);
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     };
-
-    //     loadTours();
-    // }, []);
 
     return (
         // <SafeAreaView style={styles.container}>
@@ -144,9 +155,10 @@ export default function Home() {
                         Recomendados
                     </Text>
                     
-
-                    
-                    <ProfileCardList Profiles={profiles}/>
+                    {/* <ProfileCardList Profiles={profiles}/> */}
+                    {error ? 
+                    <Text style={styles.errorMessage}>{error}</Text>
+                    : <ProfileCardList Profiles={profiles} />}
                 </View>
             </ScrollView>
         </View>
@@ -198,6 +210,10 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: 'black',
         textAlign: 'center',
+    },
+    errorMessage:{
+        fontSize:20,
+        color: 'red'
     }
 })
 
