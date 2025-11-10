@@ -50,7 +50,7 @@ export default function Home() {
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-useEffect(() => {
+    useEffect(() => {
         const loadProfiles = async () => {
             try {
                 setError(null);
@@ -74,54 +74,6 @@ useEffect(() => {
 
         loadProfiles();
     }, []);
-
-    // const profiles = [
-    //     {
-    //         id_worker: 1,
-    //         fullName: "Benjamín Barona",
-    //         pfpFileName: "Benjamin.jpg",
-    //         gallery: [
-    //             "1WorkerGallery.jpg",
-    //             "1WorkerGallery2.jpg"
-    //         ],
-    //         rating: "5.0",
-    //         totalReviews: 1,
-    //         skills: [
-    //             "Plomería"
-    //         ],
-    //         score: "11.000000000"
-    //     },
-    //     {
-    //         id_worker: 2,
-    //         fullName: "Roberto Castillo",
-    //         pfpFileName: "Roberto.jpg",
-    //         gallery: [
-    //             "2WorkerGallery.jpg"
-    //         ],
-    //         rating: "5.0",
-    //         totalReviews: 1,
-    //         skills: [
-    //             "Plomería"
-    //         ],
-    //         score: "11.000000000"
-    //     },
-    //     {
-    //         id_worker: 6,
-    //         fullName: "Jerónimo Gálvez",
-    //         pfpFileName: "Jeronimo.jpg",
-    //         gallery: [
-    //             "6WorkerGallery.jpg",
-    //             "6WorkerGallery2.jpg"
-    //         ],
-    //         rating: "5.0",
-    //         totalReviews: 1,
-    //         skills: [
-    //             "Electricidad",
-    //             "Construcción"
-    //         ],
-    //         score: "11.000000000"
-    //     }
-    // ]
 
     // para simular la selección de skill
     const handleSkillSelection = (categoryName: string) => {
@@ -154,11 +106,11 @@ useEffect(() => {
                         style={styles.title} >
                         Recomendados
                     </Text>
-                    
-                    {/* <ProfileCardList Profiles={profiles}/> */}
-                    {error ? 
-                    <Text style={styles.errorMessage}>{error}</Text>
-                    : <ProfileCardList Profiles={profiles} />}
+
+                    {error ?
+                        <Text style={styles.errorMessage}>{error}</Text>
+                        : <ProfileCardList Profiles={profiles} />}
+
                 </View>
             </ScrollView>
         </View>
@@ -177,10 +129,11 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        paddingHorizontal: 30,
+        // paddingHorizontal: 30,
         paddingTop: 16,
     },
     title: {
+        paddingHorizontal: 30,
         fontSize: 26,
         fontWeight: '400',
         marginTop: 10,
@@ -188,6 +141,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     row: {
+        paddingHorizontal: 30,
         justifyContent: 'space-between', // espacio igual entre columnas
         marginBottom: 24,
     },
@@ -211,8 +165,8 @@ const styles = StyleSheet.create({
         color: 'black',
         textAlign: 'center',
     },
-    errorMessage:{
-        fontSize:20,
+    errorMessage: {
+        fontSize: 20,
         color: 'red'
     }
 })
