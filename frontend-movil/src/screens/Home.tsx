@@ -2,6 +2,7 @@ import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpa
 import Header from "../navigation/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileCardList from "../components/ProfileCardList";
+import { useEffect } from "react";
 
 const skills = [
     { id: '1', name: 'Plomería', image: require('../../assets/skills/Plomeria.png') },
@@ -94,6 +95,28 @@ export default function Home() {
         console.log(`Skill seleccionada: ${categoryName}`);
     };
 
+    // useEffect(() => {
+    //     const loadProfiles = async () => {
+    //         try {
+    //             setError(null);
+    //             const response = await fetch(URL);
+
+    //             if (!response.ok) {
+    //                 throw new Error(Error ${response.status}: no se pudo conectar con la api);
+    //             }
+
+    //             const dataTours: Tour[] = await response.json();
+    //             setTours(dataTours.data);
+    //         } catch (err: any) {
+    //             setError('Error al cargar los tours: ' + err.message);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
+
+    //     loadTours();
+    // }, []);
+
     return (
         // <SafeAreaView style={styles.container}>
         <View style={styles.container}>
@@ -121,9 +144,9 @@ export default function Home() {
                         Recomendados
                     </Text>
                     
-                    <ProfileCardList Profiles={profiles}/>
 
                     
+                    <ProfileCardList Profiles={profiles}/>
                 </View>
             </ScrollView>
         </View>
