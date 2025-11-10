@@ -2,6 +2,7 @@
 Integrantes del equipo: Erick Saul Hernandez Sanchez, Carlos Damian Garcia Chavez, Luz Alejandra Velasco Reyes
 
 Instrucciones para instalar dependencias y ejecutar el proyecto:
+- Instalar dependencias con el comadno `npm install` en ambas carpetas
 - En la carpeta backend: Encender el servidor de express con el comando `npm run dev`
 - En la carpeta frontend: Ejecutar el proyecto en react native con el comando `npx expo start`
 
