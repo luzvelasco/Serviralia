@@ -6,7 +6,7 @@ export default function Splash({ navigation }: SplashProps) {
 
     useEffect(() => {
         setTimeout(() => {
-            navigation.replace('MainTabs')
+            navigation.replace('Login')
         }, 3000)
     }, [])
 
@@ -14,10 +14,10 @@ export default function Splash({ navigation }: SplashProps) {
         <View style={styles.contenedor}>
             <Image
                 source={require('../../assets/Logo imagen.png')}
-                style={styles.logo}/>
+                style={styles.logo} />
             <Text style={styles.titulo}>
                 Bienvenido a Serviralia
-            </Text>            
+            </Text>
         </View>
     )
 }
@@ -32,14 +32,12 @@ const styles = StyleSheet.create({
     logo: {
         width: 200,
         height: 200,
-        // borderRadius: 100,
         margin: 20
     },
     titulo: {
-        // fontFamily: 'system-ui',
         fontSize: 30,
         fontWeight: 'normal',
         color: 'black',
         margin: 10
-  }
+    }
 })
