@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LoginProps } from "../types/navigation";
 
-export default function Login() {
+export default function Login({ navigation }: LoginProps) {
 
     // para similar el remember me
     const [rememberMe, setRememberMe] = useState(false);
+
+    // para simular el login y navegar a la pantalla splash
+    const handleLogin = () => {
+        navigation.replace('MainTabs');
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -41,7 +47,8 @@ export default function Login() {
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                    style={styles.loginButton}>
+                    style={styles.loginButton}
+                    onPress={handleLogin}>
                     <Text style={styles.loginButtonText}>Entrar</Text>
                 </TouchableOpacity>
 

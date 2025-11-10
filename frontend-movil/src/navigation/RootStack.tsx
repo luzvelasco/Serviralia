@@ -9,9 +9,16 @@ const RootStack = createStackNavigator();
 export default function RootNavigator() {
     return (
         <RootStack.Navigator screenOptions={{ headerShown: false }}>
-            <RootStack.Screen name="Splash" component={Splash} />
-            <RootStack.Screen name="Login" component={Login} />
-            <RootStack.Screen name="MainTabs" component={NavTab} />
+            <RootStack.Screen
+                name="Splash"
+                component={Splash} />
+            <RootStack.Screen
+                name="Login"
+                component={Login} />
+            <RootStack.Screen
+                name="MainTabs"
+                options={{headerShown: false}}
+                component={NavTab} />
         </RootStack.Navigator>
     );
 }
