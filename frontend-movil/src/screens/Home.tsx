@@ -1,6 +1,7 @@
 import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Header from "../navigation/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ProfileCardList from "../components/ProfileCardList";
 
 const skills = [
     { id: '1', name: 'Plomería', image: require('../../assets/skills/Plomeria.png') },
@@ -11,7 +12,7 @@ const skills = [
     { id: '6', name: 'Otros', image: require('../../assets/skills/Otros.png') },
 ];
 
-const SkillsGrid = ({ skill, onPress }) => {
+const SkillsGrid = ({ skill, onPress }: any) => {
 
     // asigna color diferente botones de skills
     let backgroundColor;
@@ -40,13 +41,62 @@ const SkillsGrid = ({ skill, onPress }) => {
 
 export default function Home() {
 
+    const profiles = [
+        {
+            id_worker: 1,
+            fullName: "Benjamín Barona",
+            pfpFileName: "Benjamin.jpg",
+            gallery: [
+                "1WorkerGallery.jpg",
+                "1WorkerGallery2.jpg"
+            ],
+            rating: "5.0",
+            totalReviews: 1,
+            skills: [
+                "Plomería"
+            ],
+            score: "11.000000000"
+        },
+        {
+            id_worker: 2,
+            fullName: "Roberto Castillo",
+            pfpFileName: "Roberto.jpg",
+            gallery: [
+                "2WorkerGallery.jpg"
+            ],
+            rating: "5.0",
+            totalReviews: 1,
+            skills: [
+                "Plomería"
+            ],
+            score: "11.000000000"
+        },
+        {
+            id_worker: 6,
+            fullName: "Jerónimo Gálvez",
+            pfpFileName: "Jeronimo.jpg",
+            gallery: [
+                "6WorkerGallery.jpg",
+                "6WorkerGallery2.jpg"
+            ],
+            rating: "5.0",
+            totalReviews: 1,
+            skills: [
+                "Electricidad",
+                "Construcción"
+            ],
+            score: "11.000000000"
+        }
+    ]
+
     // para simular la selección de skill
     const handleSkillSelection = (categoryName: string) => {
         console.log(`Skill seleccionada: ${categoryName}`);
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        // <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Header />
             <ScrollView style={styles.scroll}>
                 <View style={styles.content}>
@@ -65,19 +115,19 @@ export default function Home() {
                         columnWrapperStyle={styles.row}
                         scrollEnabled={false}
                     />
+
                     <Text
                         style={styles.title} >
                         Recomendados
                     </Text>
-                    <Image
-                        source={require('../../assets/icon.png')}
-                        style={styles.workerIcon}
-                    />
-                    <Text>Alejandro Mendoza</Text>
-                    <Text>5.0 ⭐⭐⭐⭐⭐ 85 reseñas</Text>
+                    
+                    <ProfileCardList Profiles={profiles}/>
+
+                    
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
+        // </SafeAreaView>
     )
 }
 
@@ -125,12 +175,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: 'black',
         textAlign: 'center',
-    },
-    workerIcon: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginRight: 10,
     }
 })
 

@@ -9,4 +9,5 @@ export type RootStackParamList = {
 export type SplashProps = StackScreenProps<RootStackParamList, 'Splash'>;
 export type LoginProps = StackScreenProps<RootStackParamList, 'Login'>;
 
-// export const API_URL = 'http://localhost:3000/api';
+export const API_URL = 'http://localhost:3003/';
+
