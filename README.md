@@ -1,5 +1,8 @@
 # Serviralia
-En Cancún, la búsqueda de servicios de mantenimiento para el hogar se basa principalmente en recomendaciones personales, un método que no siempre garantiza la calidad ni la seguridad de los servicios contratados. Al mismo tiempo, los trabajadores especializados enfrentan dificultades para encontrar clientes de manera constante, lo que impacta negativamente en su estabilidad económica.
+Integrantes del equipo: Erick Saul Hernandez Sanchez, Carlos Damian Garcia Chavez, Luz Alejandra Velasco Reyes
 
-El proyecto Serviralia busca transformar esta realidad mediante una plataforma web innovadora y segura, diseñada para conectar a los ciudadanos con trabajadores especializados en servicios de mantenimiento para el hogar.
+Instrucciones para instalar dependencias y ejecutar el proyecto:
+- En la carpeta backend: Encender el servidor de express con el comando `npm run dev`
+- En la carpeta frontend: Ejecutar el proyecto en react native con el comando `npx expo start`
 
+Módulo implementado: La página de inicio muestra las 6 categorías de servicios que ofrecen los trabajadores registrados en Serviralia, seleccionar una redirige al usuario la página de búsqueda de cada servicio. Debajo de las opciones de categoría hay una lista de trabajadores recomendados, seleccionados por tener las calificaciones más altas.
