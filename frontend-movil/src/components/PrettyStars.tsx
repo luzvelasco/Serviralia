@@ -56,7 +56,7 @@ const PrettyStars: React.FC<PrettyStarsProps> = ({ rating }) => {
     <div style={{ color: '#FFC107', margin: '8px 0' }}>
       {/* Full stars */}
       {Array.from({ length: ratingNum }).map((_, i) => (
-        <StarFull/>
+        <StarFull key={i}/>
       ))}
 
       {/* Half star (if needed) */}
@@ -64,7 +64,7 @@ const PrettyStars: React.FC<PrettyStarsProps> = ({ rating }) => {
 
       {/* Empty stars */}
       {Array.from({ length: emptyStars }).map((_, i) => (
-        <StarEmpty />
+        <StarEmpty  key={i}/>
       ))}
     </div>
   );
