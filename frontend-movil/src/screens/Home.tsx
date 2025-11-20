@@ -1,18 +1,18 @@
 import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Header from "../navigation/Header";
-import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileCardList from "../components/ProfileCardList";
 import { useEffect, useState } from "react";
-import { API_URL } from "../types/navigation";
+import { API_URL, RootStackParamList } from "../types/navigation";
 import { Profile } from "../types/profile";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 const skills = [
-    { id: '1', name: 'Plomería', image: require('../../assets/skills/Plomeria.png') },
-    { id: '2', name: 'Electricidad', image: require('../../assets/skills/Electricidad.png') },
-    { id: '3', name: 'Limpieza', image: require('../../assets/skills/Limpieza.png') },
-    { id: '4', name: 'Mecánica', image: require('../../assets/skills/Mecanica.png') },
-    { id: '5', name: 'Construcción', image: require('../../assets/skills/Construccion.png') },
-    { id: '6', name: 'Otros', image: require('../../assets/skills/Otros.png') },
+    { id: 1, name: 'Plomería', image: require('../../assets/skills/Plomeria.png') },
+    { id: 2, name: 'Electricidad', image: require('../../assets/skills/Electricidad.png') },
+    { id: 3, name: 'Limpieza', image: require('../../assets/skills/Limpieza.png') },
+    { id: 4, name: 'Mecánica', image: require('../../assets/skills/Mecanica.png') },
+    { id: 5, name: 'Construcción', image: require('../../assets/skills/Construccion.png') },
+    { id: 6, name: 'Otros', image: require('../../assets/skills/Otros.png') },
 ];
 
 const SkillsGrid = ({ skill, onPress }: any) => {
@@ -20,12 +20,12 @@ const SkillsGrid = ({ skill, onPress }: any) => {
     // asigna color diferente botones de skills
     let backgroundColor;
     switch (skill.id) {
-        case '1': backgroundColor = '#CAEBFF'; break;
-        case '2': backgroundColor = '#FFECAC'; break;
-        case '3': backgroundColor = '#FEE4E8'; break;
-        case '4': backgroundColor = '#FFEDE0'; break;
-        case '5': backgroundColor = '#DFD3D3'; break;
-        case '6': backgroundColor = '#E9E8E8'; break;
+        case 1: backgroundColor = '#CAEBFF'; break;
+        case 2: backgroundColor = '#FFECAC'; break;
+        case 3: backgroundColor = '#FEE4E8'; break;
+        case 4: backgroundColor = '#FFEDE0'; break;
+        case 5: backgroundColor = '#DFD3D3'; break;
+        case 6: backgroundColor = '#E9E8E8'; break;
         default: backgroundColor = '#F0F0F0';
     }
 
@@ -33,7 +33,7 @@ const SkillsGrid = ({ skill, onPress }: any) => {
     return (
         <TouchableOpacity
             style={[styles.gridItem, { backgroundColor: backgroundColor }]}
-            onPress={() => onPress(skill.name)}
+            onPress={() => onPress(skill.id)}
             activeOpacity={0.7}
         >
             <Image source={skill.image} style={styles.gridItemImage} />
@@ -44,7 +44,8 @@ const SkillsGrid = ({ skill, onPress }: any) => {
 
 export default function Home() {
 
-    const URL = API_URL + '/user/SearchSkill/all';
+    const URL = API_URL + 'user/SearchSkill/all';
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const [isLoading, setIsLoading] = useState(true);
     const [profiles, setProfiles] = useState<Profile[]>([]);
@@ -76,8 +77,9 @@ export default function Home() {
     }, []);
 
     // para simular la selección de skill
-    const handleSkillSelection = (categoryName: string) => {
-        console.log(`Skill seleccionada: ${categoryName}`);
+    const handleSkillSelection = (skillId: number) => {
+        console.log(`Skill seleccionada: ${skillId}`);
+        navigation.navigate('Search', { skillId: skillId})
     };
 
     return (
@@ -96,7 +98,7 @@ export default function Home() {
                         renderItem={({ item }) => (
                             <SkillsGrid skill={item} onPress={handleSkillSelection} />
                         )}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => String(item.id)}
                         numColumns={2}
                         columnWrapperStyle={styles.row}
                         scrollEnabled={false}
@@ -147,7 +149,8 @@ const styles = StyleSheet.create({
     },
     gridItem: {
         height: 120,
-        width: 156,
+        // width: 156,
+        width: (Dimensions.get('window').width / 2) - 40, // para pantallas más grandes
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
@@ -166,7 +169,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     errorMessage: {
-        fontSize: 20,
+        fontSize: 18,
+        padding: 20,
         color: 'red'
     }
 })
