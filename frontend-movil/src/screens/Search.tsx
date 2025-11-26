@@ -1,9 +1,11 @@
-import { useRoute } from "@react-navigation/native";
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { API_URL, SearchProps } from "../types/navigation";
+import { NavigationProp, useNavigation, useRoute } from "@react-navigation/native";
+import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { API_URL, RootStackParamList, SearchProps } from "../types/navigation";
 import { useEffect, useState } from "react";
 import { Profile } from "../types/profile";
 import ProfileCardList from "../components/ProfileCardList";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import PrettyStars from "../components/PrettyStars";
 
 interface Skill {
     id_skill: number;
@@ -21,11 +23,13 @@ export default function Search() {
     const [error, setError] = useState<string | null>(null);
     const [skillName, setSkillName] = useState('skill seleccionada');
 
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
     useEffect(() => {
 
         const fetchSkillName = async () => {
             try {
-                setIsLoadingSkillName(true);
+                // setIsLoadingSkillName(true);
                 const response = await fetch(API_URL + 'user/skills');
 
                 if (!response.ok) {
@@ -49,7 +53,7 @@ export default function Search() {
                 console.error("Error al obtener el nombre de la skill:", err);
                 setSkillName(`Error al cargar nombre (ID: ${skillId})`);
             } finally {
-                setIsLoadingSkillName(false);
+                // setIsLoadingSkillName(false);
             }
         };
 
@@ -61,7 +65,7 @@ export default function Search() {
 
         const loadProfiles = async () => {
             try {
-                setIsLoadingProfiles(true);
+                // setIsLoadingProfiles(true);
                 setError(null);
 
                 const response = await fetch(URL)
@@ -77,49 +81,118 @@ export default function Search() {
                     setProfiles([]) // limpiar lista de perfiles en caso de error
                 }
 
-                setProfiles(responsejson.data);
+                setProfiles(responsejson.data.slice(0, 10));
             } catch (err: any) {
                 console.log(err.message);
                 setError('¡Vaya! Ocurrió un error')
             } finally {
-                setIsLoadingProfiles(false);
+                // setIsLoadingProfiles(false);
             }
         }
         loadProfiles();
-    }, []);
+    }, [skillId]);
 
-    if (isLoadingProfiles || isLoadingSkillName) {
-        return (
-            <View style={styles.container}>
-                <ScrollView style={styles.scroll}>
-                    <ActivityIndicator size="large" color="#2A5C8C" />
-                    <Text>
-                        Cargando perfiles...
-                    </Text>
-                </ScrollView>
+    // selección de trabajador para visualizar perfil
+    const handleWorkerSelection = (workerId: number) => {
+        console.log(`Trabajador seleccionado: ${workerId}`);
+        navigation.navigate('WorkerProfile', { workerId: workerId })
+    };
+
+    // if (isLoadingProfiles || isLoadingSkillName) {
+    //     return (
+    //         <View style={[styles.container, styles.centerContent]}>
+    //             <ActivityIndicator size="large" color="#2A5C8C" />
+    //             <Text>
+    //                 Cargando perfiles...
+    //             </Text>
+    //         </View>
+    //     )
+    // }
+
+    const HeaderComponent = () => (
+        <>
+            <Image style={{ width: '100%', height: 150 }} source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }} />
+            <Text style={styles.title}>{skillName}</Text>
+        </>
+    );
+
+    const RenderProfileCard  = ({ item, onPress }: any) => (
+        <TouchableOpacity
+            style={styles.cardContainer}
+            onPress={() => onPress(item.id_worker)}
+            activeOpacity={0.8}
+        >
+
+            <View style={styles.cardHeader}>
+                <Image
+                    source={{ uri: API_URL + '/images/' + item.pfpFileName }}
+                    style={styles.workerIcon}
+                />
+
+
+                <View style={styles.cardInfo}>
+                    <Text style={styles.name}>
+                        {item.fullName}</Text>
+
+                    <View style={styles.reviewContainer}>
+                        <Text style={styles.review}>{item.rating}</Text>
+
+                        <PrettyStars rating={item.rating} />
+
+                        <Text style={styles.review}>
+                            {item.totalReviews}
+                            {item.totalReviews === 1 ? ' reseña' : ' reseñas'}
+                        </Text>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+
+                        {item.skills.map((skill: string, index: number) => (
+                            <Text style={styles.skill} key={index}>{skill}</Text>
+                        ))}
+                    </View>
+
+
+                </View>
             </View>
-        )
-    }
+
+        </TouchableOpacity>
+    );
 
     return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.container}>
-            <ScrollView style={styles.scroll}>
+            <FlatList
+                data={profiles}
+                keyExtractor={(item) => item.id_worker.toString()}
+                renderItem={({ item }) => <RenderProfileCard item={item} onPress={handleWorkerSelection} />}
+                ListHeaderComponent={<HeaderComponent />}
+                contentContainerStyle={{ paddingBottom: 40 }}
+                showsVerticalScrollIndicator={true}
+            />
+            {/* <ScrollView style={styles.scroll}
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
+                showsVerticalScrollIndicator={true}>
+                <View style={styles.content}>
+                    <Image
+                        style={{ width: '100%', height: 150 }}
+                        source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }}
+                    />
+                    <Text style={styles.title}>
+                        {skillName}
+                    </Text>
 
-                <Image
-                    style={{ width: '100%', height: 150 }}
-                    source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }}
-                />
-                <Text style={styles.title}>
-                    {skillName}
-                </Text>
-
-                {error ?
-                    <Text style={styles.errorMessage}>
-                        {error}
-                    </Text> : <ProfileCardList Profiles={profiles} />
-                }
-            </ScrollView>
-        </View>
+                    {error ? (
+                        <Text style={styles.errorMessage}>{error}</Text>
+                    ) : (
+                        <ProfileCardList
+                            Profiles={profiles}
+                            onProfilePress={handleWorkerSelection}
+                        />
+                    )}
+                </View>
+            </ScrollView> */}
+        </View></GestureHandlerRootView>
     )
 }
 
@@ -129,25 +202,88 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     scroll: {
-        paddingBottom: 40
+        flex: 1,
+        paddingBottom: 0,
+        backgroundColor: 'red'
     },
     content: {
-        flex: 1,
-        // paddingHorizontal: 30,
-        paddingTop: 16,
+        // flex: 1,
+        paddingBottom: 10
+    },
+    centerContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title: {
         justifyContent: 'center',
         textAlign: 'center',
         fontSize: 32,
-        fontWeight: '600',
-        marginTop: 15,
+        marginTop: 20,
         marginBottom: 22,
         color: 'black',
+        fontFamily: 'Inter_500Medium'
     },
     errorMessage: {
         fontSize: 18,
         padding: 20,
-        color: 'red'
+        color: 'red',
+        fontFamily: 'Inter_500Medium'
+    },
+
+
+    cardContainer: {
+        padding: 20,
+        borderRadius: 15,
+        marginBottom: 30,
+        // marginHorizontal: 30,
+        marginLeft: 30,
+        marginRight: 30,
+        // Sombra para iOS
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+    },
+    cardHeader: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+    },
+    workerIcon: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginRight: 10,
+    },
+    cardInfo: {
+
+    },
+    name: {
+        fontSize: 18,
+        paddingBottom: 5,
+        fontFamily: 'Inter_400Regular'
+    },
+    review: {
+        fontSize: 13,
+        // paddingBottom: 1,
+        marginHorizontal: 5,
+        fontFamily: 'Inter_400Regular'
+    },
+    reviewContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    skill: {
+        borderRadius: 16,
+        // width: 150,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        color: 'white',
+        backgroundColor: '#333333',
+        marginRight: 10,
+        fontFamily: 'Inter_400Regular',
+        fontSize: 13
     }
 })

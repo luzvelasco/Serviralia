@@ -35,9 +35,10 @@ const styles = StyleSheet.create({
         margin: 20
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 28,
         fontWeight: 'normal',
         color: 'black',
-        margin: 10
+        margin: 10,
+        fontFamily: 'Inter_400Regular'
     }
 })

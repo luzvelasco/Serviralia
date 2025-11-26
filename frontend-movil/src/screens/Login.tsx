@@ -2,8 +2,13 @@ import { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LoginProps } from "../types/navigation";
+import { Inter_400Regular, Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
 
 export default function Login({ navigation }: LoginProps) {
+
+    let [fontsLoaded] = useFonts({
+        Inter_400Regular
+    })
 
     // para similar el remember me
     const [rememberMe, setRememberMe] = useState(false);
@@ -93,18 +98,20 @@ const styles = StyleSheet.create({
         color: '#000',
         fontWeight: '400',
         marginBottom: 20,
+        fontFamily: 'Inter_400Regular'
     },
     inputContainer: {
         width: 275,
         height: 94,
         borderColor: '#BEBEBE',
         borderWidth: 1,
-        borderRadius: 0,
+        borderRadius: 0
     },
     input: {
         height: 47, // La mitad de la altura del contenedor (94 / 2)
         paddingHorizontal: 10,
         fontSize: 15,
+        fontFamily: 'Inter_400Regular'
     },
     inputEmail: {
         borderBottomWidth: 1, // La línea que separa los dos campos
@@ -130,6 +137,7 @@ const styles = StyleSheet.create({
     },
     rememberMeText: {
         marginLeft: 8,
+        fontFamily: 'Inter_400Regular'
     },
     loginButton: {
         backgroundColor: '#2A5C8C',
@@ -143,6 +151,7 @@ const styles = StyleSheet.create({
     loginButtonText: {
         color: '#FFFFFF',
         fontSize: 16,
+        fontFamily: 'Inter_400Regular'
     },
     dividerContainer: {
         flexDirection: 'row',
@@ -158,6 +167,7 @@ const styles = StyleSheet.create({
     dividerText: {
         marginHorizontal: 10,
         color: 'black',
+        fontFamily: 'Inter_400Regular'
     },
     roleButtonContainer: {
         flexDirection: 'row',
@@ -177,5 +187,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#000',
         fontWeight: 'normal',
+        fontFamily: 'Inter_400Regular'
     },
 });

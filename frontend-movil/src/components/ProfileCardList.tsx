@@ -4,16 +4,23 @@ import { API_URL } from "../types/navigation";
 import PrettyStars from './PrettyStars';
 import { Profile } from '../types/profile';
 
+interface ProfileCardListProps {
+    Profiles: Profile[];
+    onProfilePress: (workerId: number) => void;
+}
 
-export default function ProfileCardList({ Profiles }: { Profiles: Profile[] }) {
+export default function ProfileCardList({ Profiles, onProfilePress }: ProfileCardListProps) {
     // console.log(API_URL);
-
 
     console.log(Profiles); // This prints the list fine
 
 
     const RenderCard = ({ item }: any) => (
-        <View style={styles.cardContainer}>
+        <TouchableOpacity
+            style={styles.cardContainer}
+            onPress={() => onProfilePress(item.id_worker)}
+            activeOpacity={0.8}
+        >
 
             <View style={styles.cardHeader}>
                 <Image
@@ -48,7 +55,7 @@ export default function ProfileCardList({ Profiles }: { Profiles: Profile[] }) {
                 </View>
             </View>
 
-        </View>
+        </TouchableOpacity>
     );
 
 
@@ -57,6 +64,9 @@ export default function ProfileCardList({ Profiles }: { Profiles: Profile[] }) {
             data={Profiles}
             renderItem={({ item }) => <RenderCard item={item} />}
             keyExtractor={(item) => item.id_worker.toString()}
+            scrollEnabled={false}
+            maxToRenderPerBatch={9999}
+            initialNumToRender={100}
         />
     )
 }
@@ -90,12 +100,14 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 18,
-        paddingBottom: 5
+        paddingBottom: 5,
+        fontFamily: 'Inter_400Regular'
     },
     review: {
-        fontSize: 16,
-        paddingBottom: 6,
-        marginHorizontal: 5
+        fontSize: 13,
+        // paddingBottom: 1,
+        marginHorizontal: 5,
+        fontFamily: 'Inter_400Regular'
     },
     reviewContainer: {
         display: 'flex',
@@ -111,7 +123,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         color: 'white',
         backgroundColor: '#333333',
-        marginRight: 10
+        marginRight: 10,
+        fontFamily: 'Inter_400Regular',
+        fontSize: 13
     }
 
 

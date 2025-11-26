@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 export default function Header() {
+
     return (
         <View style={styles.container}>
             <Image
@@ -32,7 +33,10 @@ const styles = StyleSheet.create({
     },
     title: {
         color: 'white',
+        paddingLeft: 3,
         fontSize: 30,
-        fontWeight: '500',
+        letterSpacing: 0.5,
+        // fontFamily: 'Inter_500Medium',
+        fontFamily: 'Inter_400Regular'
     },
 });

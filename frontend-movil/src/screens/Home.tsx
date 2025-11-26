@@ -76,14 +76,19 @@ export default function Home() {
         loadProfiles();
     }, []);
 
-    // para simular la selección de skill
+    // selección de skill
     const handleSkillSelection = (skillId: number) => {
         console.log(`Skill seleccionada: ${skillId}`);
-        navigation.navigate('Search', { skillId: skillId})
+        navigation.navigate('Search', { skillId: skillId })
+    };
+
+    // selección de trabajador para visualizar perfil
+    const handleWorkerSelection = (workerId: number) => {
+        console.log(`Trabajador seleccionado: ${workerId}`);
+        navigation.navigate('WorkerProfile', { workerId: workerId })
     };
 
     return (
-        // <SafeAreaView style={styles.container}>
         <View style={styles.container}>
             <Header />
             <ScrollView style={styles.scroll}>
@@ -110,13 +115,18 @@ export default function Home() {
                     </Text>
 
                     {error ?
-                        <Text style={styles.errorMessage}>{error}</Text>
-                        : <ProfileCardList Profiles={profiles} />}
+                        <Text style={styles.errorMessage}>
+                            {error}
+                        </Text>
+                        :
+                        <ProfileCardList
+                            Profiles={profiles}
+                            onProfilePress={handleWorkerSelection}
+                        />}
 
                 </View>
             </ScrollView>
         </View>
-        // </SafeAreaView>
     )
 }
 
@@ -131,7 +141,6 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        // paddingHorizontal: 30,
         paddingTop: 16,
     },
     title: {
@@ -141,6 +150,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 22,
         color: 'black',
+        fontFamily: 'Inter_400Regular'
     },
     row: {
         paddingHorizontal: 30,
@@ -164,14 +174,15 @@ const styles = StyleSheet.create({
     },
     gridItemText: {
         fontSize: 16,
-        fontWeight: '600',
         color: 'black',
         textAlign: 'center',
+        fontFamily: 'Inter_600SemiBold'
     },
     errorMessage: {
         fontSize: 18,
         padding: 20,
-        color: 'red'
+        color: 'red',
+        fontFamily: 'Inter_500Medium'
     }
 })
 
