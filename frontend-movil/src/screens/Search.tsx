@@ -29,7 +29,7 @@ export default function Search() {
 
         const fetchSkillName = async () => {
             try {
-                // setIsLoadingSkillName(true);
+                setIsLoadingSkillName(true);
                 const response = await fetch(API_URL + 'user/skills');
 
                 if (!response.ok) {
@@ -53,7 +53,7 @@ export default function Search() {
                 console.error("Error al obtener el nombre de la skill:", err);
                 setSkillName(`Error al cargar nombre (ID: ${skillId})`);
             } finally {
-                // setIsLoadingSkillName(false);
+                setIsLoadingSkillName(false);
             }
         };
 
@@ -65,7 +65,7 @@ export default function Search() {
 
         const loadProfiles = async () => {
             try {
-                // setIsLoadingProfiles(true);
+                setIsLoadingProfiles(true);
                 setError(null);
 
                 const response = await fetch(URL)
@@ -86,7 +86,7 @@ export default function Search() {
                 console.log(err.message);
                 setError('¡Vaya! Ocurrió un error')
             } finally {
-                // setIsLoadingProfiles(false);
+                setIsLoadingProfiles(false);
             }
         }
         loadProfiles();
@@ -98,90 +98,97 @@ export default function Search() {
         navigation.navigate('WorkerProfile', { workerId: workerId })
     };
 
-    // if (isLoadingProfiles || isLoadingSkillName) {
-    //     return (
-    //         <View style={[styles.container, styles.centerContent]}>
-    //             <ActivityIndicator size="large" color="#2A5C8C" />
-    //             <Text>
-    //                 Cargando perfiles...
-    //             </Text>
-    //         </View>
-    //     )
-    // }
-
-    const HeaderComponent = () => (
-        <>
-            <Image style={{ width: '100%', height: 150 }} source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }} />
-            <Text style={styles.title}>{skillName}</Text>
-        </>
-    );
-
-    const RenderProfileCard  = ({ item, onPress }: any) => (
-        <TouchableOpacity
-            style={styles.cardContainer}
-            onPress={() => onPress(item.id_worker)}
-            activeOpacity={0.8}
-        >
-
-            <View style={styles.cardHeader}>
-                <Image
-                    source={{ uri: API_URL + '/images/' + item.pfpFileName }}
-                    style={styles.workerIcon}
-                />
-
-
-                <View style={styles.cardInfo}>
-                    <Text style={styles.name}>
-                        {item.fullName}</Text>
-
-                    <View style={styles.reviewContainer}>
-                        <Text style={styles.review}>{item.rating}</Text>
-
-                        <PrettyStars rating={item.rating} />
-
-                        <Text style={styles.review}>
-                            {item.totalReviews}
-                            {item.totalReviews === 1 ? ' reseña' : ' reseñas'}
-                        </Text>
-                    </View>
-
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-
-                        {item.skills.map((skill: string, index: number) => (
-                            <Text style={styles.skill} key={index}>{skill}</Text>
-                        ))}
-                    </View>
-
-
-                </View>
+    if (isLoadingProfiles || isLoadingSkillName) {
+        return (
+            <View style={[styles.container, styles.centerContent]}>
+                <ActivityIndicator size="large" color="#2A5C8C" />
+                <Text>
+                    Cargando perfiles...
+                </Text>
             </View>
+        )
+    }
 
-        </TouchableOpacity>
-    );
+
+    // -------------------------------------------- FLATLIST EVERYTHING --------------------------------------------------------
+
+    // const HeaderComponent = () => (
+    //     <>
+    //         <Image style={{ width: '100%', height: 150 }} source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }} />
+    //         <Text style={styles.title}>{skillName}</Text>
+    //     </>
+    // );
+
+    // const RenderProfileCard  = ({ item, onPress }: any) => (
+    //     <TouchableOpacity
+    //         style={styles.cardContainer}
+    //         onPress={() => onPress(item.id_worker)}
+    //         activeOpacity={0.8}
+    //     >
+
+    //         <View style={styles.cardHeader}>
+    //             <Image
+    //                 source={{ uri: API_URL + '/images/' + item.pfpFileName }}
+    //                 style={styles.workerIcon}
+    //             />
+
+
+    //             <View style={styles.cardInfo}>
+    //                 <Text style={styles.name}>
+    //                     {item.fullName}</Text>
+
+    //                 <View style={styles.reviewContainer}>
+    //                     <Text style={styles.review}>{item.rating}</Text>
+
+    //                     <PrettyStars rating={item.rating} />
+
+    //                     <Text style={styles.review}>
+    //                         {item.totalReviews}
+    //                         {item.totalReviews === 1 ? ' reseña' : ' reseñas'}
+    //                     </Text>
+    //                 </View>
+
+    //                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+
+    //                     {item.skills.map((skill: string, index: number) => (
+    //                         <Text style={styles.skill} key={index}>{skill}</Text>
+    //                     ))}
+    //                 </View>
+
+
+    //             </View>
+    //         </View>
+
+    //     </TouchableOpacity>
+    // );
 
     return (
+        // {/* <GestureHandlerRootView style={{ flex: 1 }}>
+        //     <View style={styles.container}>
+        //         <FlatList
+        //             data={profiles}
+        //             keyExtractor={(item) => item.id_worker.toString()}
+        //             renderItem={({ item }) => <RenderProfileCard item={item} onPress={handleWorkerSelection} />}
+        //             ListHeaderComponent={<HeaderComponent />}
+        //             contentContainerStyle={{ paddingBottom: 40 }}
+        //             showsVerticalScrollIndicator={true}
+        //         />
+        //         <ScrollView style={styles.scroll}
+        //         contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
+        //         showsVerticalScrollIndicator={true}> */}
         <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={styles.container}>
-            <FlatList
-                data={profiles}
-                keyExtractor={(item) => item.id_worker.toString()}
-                renderItem={({ item }) => <RenderProfileCard item={item} onPress={handleWorkerSelection} />}
-                ListHeaderComponent={<HeaderComponent />}
-                contentContainerStyle={{ paddingBottom: 40 }}
-                showsVerticalScrollIndicator={true}
-            />
-            {/* <ScrollView style={styles.scroll}
-                contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
-                showsVerticalScrollIndicator={true}>
-                <View style={styles.content}>
+            <View style={styles.content}>
+                <View>
                     <Image
                         style={{ width: '100%', height: 150 }}
                         source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }}
                     />
+                </View>
+                <ScrollView style={styles.scroll}>
                     <Text style={styles.title}>
                         {skillName}
                     </Text>
-
+                
                     {error ? (
                         <Text style={styles.errorMessage}>{error}</Text>
                     ) : (
@@ -190,25 +197,29 @@ export default function Search() {
                             onProfilePress={handleWorkerSelection}
                         />
                     )}
-                </View>
-            </ScrollView> */}
-        </View></GestureHandlerRootView>
+                </ScrollView>
+            </View>
+        </GestureHandlerRootView>
+        //     {/* </ScrollView>} */}
+        //     {/* </View>
+        // </GestureHandlerRootView> */}
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'white',
     },
     scroll: {
-        flex: 1,
-        paddingBottom: 0,
-        backgroundColor: 'red'
+        // flex: 1,
+        paddingBottom: 40,
+        backgroundColor: 'red' // para pruebas
     },
     content: {
-        // flex: 1,
-        paddingBottom: 10
+        flex: 1,
+        backgroundColor: 'white',
+        paddingBottom: 40
     },
     centerContent: {
         justifyContent: 'center',

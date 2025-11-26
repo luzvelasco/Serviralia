@@ -65,8 +65,6 @@ export default function ProfileCardList({ Profiles, onProfilePress }: ProfileCar
             renderItem={({ item }) => <RenderCard item={item} />}
             keyExtractor={(item) => item.id_worker.toString()}
             scrollEnabled={false}
-            maxToRenderPerBatch={9999}
-            initialNumToRender={100}
         />
     )
 }

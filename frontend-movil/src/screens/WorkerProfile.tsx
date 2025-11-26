@@ -25,7 +25,7 @@ export default function WorkerProfile() {
 
         const loadWorkerInfo = async () => {
             try {
-                // setIsLoadingProfileData(true);
+                setIsLoadingProfileData(true);
                 setError(null);
 
                 const response = await fetch(URL)
@@ -46,7 +46,7 @@ export default function WorkerProfile() {
                 console.log(err.message);
                 setError('¡Vaya! Ocurrió un error')
             } finally {
-                // setIsLoadingProfileData(false);
+                setIsLoadingProfileData(false);
             }
         }
         loadWorkerInfo();
@@ -99,7 +99,7 @@ export default function WorkerProfile() {
 
     return (
         <View style={styles.container} >
-            <ScrollView style={styles.scroll} >
+            {/* <ScrollView style={styles.scroll} > */}
 
                 {/* INFORMACIÓN GENERAL */}
                 <View style={styles.mainInfo}>
@@ -184,7 +184,7 @@ export default function WorkerProfile() {
                         <ReviewCard key={review.id} review={review} />
                     ))}
                 </View>
-            </ScrollView>
+            {/* </ScrollView> */}
         </View>
     )
 }
