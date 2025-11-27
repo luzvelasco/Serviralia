@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log("\nServer is Successfully Running on port " + port)
     console.log("Click here to check it out: http://localhost:" + port);
     console.log("Swagger Documentation UI: http://localhost:" + port + "/api-docs/")

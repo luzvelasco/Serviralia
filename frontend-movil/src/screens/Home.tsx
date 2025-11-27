@@ -55,7 +55,7 @@ export default function Home() {
         const loadProfiles = async () => {
             try {
                 setError(null);
-                const response = await fetch('http://localhost:3003/user/SearchSkill/null');
+                const response = await fetch(URL);
 
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: no se pudo conectar con la api`);
