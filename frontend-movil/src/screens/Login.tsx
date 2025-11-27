@@ -1,25 +1,69 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LoginProps } from "../types/navigation";
+import { API_URL, LoginProps } from "../types/navigation";
+import { UserContext } from "../../App";
 
 export default function Login({ navigation }: LoginProps) {
+    const URL = API_URL + 'login';
+
+    const { setUser } = useContext(UserContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // para similar el remember me
     const [rememberMe, setRememberMe] = useState(false);
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
+        if (rememberMe) { // Hack para pasar iniciar sesion
+            navigation.replace('MainTabs');
+            return;
+        }
 
-        // if (!email || !password) {
-        //     Alert.alert("Error de Inicio de Sesión", "Por favor, introduce tu correo y contraseña.");
-        //     return;
-        // }
+        if (!email || !password) {
+            Alert.alert("Inicia sesión", "Por favor, introduce tu correo y contraseña.");
+            return;
+        }
 
-        // console.log(`Intentando iniciar sesión con Email: ${email} y Contraseña: ${password}`);
-        navigation.replace('MainTabs');
+        console.log(`Intentando iniciar sesión con Email: ${email} y Contraseña: ${password}`);
+
+        try {
+            const response = await fetch(URL, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            });
+
+            // console.log(response.body);
+            const data = await response.json()
+            // console.log(data);
+
+            if (!data.success) {
+                Alert.alert(data.message, data.error);
+                console.log(data.message, ":", data.error);
+                return;
+            }
+
+            console.log(data.data);
+            setUser(data.data)
+            navigation.replace('MainTabs');
+            return;
+
+
+
+
+        } catch (error: any) {
+            console.error("Error al iniciar sesión:", error.error);
+            Alert.alert("Error de Envío", `No se pudo iniciar sesión: ${error.error}.`);
+
+        }
+
+
     };
 
     const handleClientSignup = () => {
@@ -77,7 +121,9 @@ export default function Login({ navigation }: LoginProps) {
                 </View>
                 <TouchableOpacity
                     style={styles.loginButton}
-                    onPress={handleLogin}>
+                    onPress={handleLogin}
+                // disabled={isSubmitting}
+                >
                     <Text style={styles.loginButtonText}>
                         Entrar
                     </Text>

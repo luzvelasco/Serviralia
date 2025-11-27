@@ -48,8 +48,8 @@ app.use('/signup', signupRoutes)
 const editRoutes = require('./routes/edit.routes')
 app.use('/edit', editRoutes)
 
-// const loginRoutes = require('./routes/login.routes')
-// app.use('/login', loginRoutes)
+const loginRoutes = require('./routes/login.routes')
+app.use('/login', loginRoutes)
 
 // Home
 app.get('/', (req, res) => {
