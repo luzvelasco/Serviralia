@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import Header from "../navigation/Header";
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { ProfileProps, RootStackParamList } from "../types/navigation";
+import { API_URL, ProfileProps, RootStackParamList } from "../types/navigation";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { UserContext } from "../../App";
 
 
 export default function Profile() {
+    const URL = API_URL + 'edit/client';
+
+    const { user } = useContext(UserContext);
 
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -18,16 +22,81 @@ export default function Profile() {
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-    const handleUpdate = () => {
-        console.log('Nuevos datos ', {
-            name,
-            lastName,
-            email,
-            phone,
-            birthDate
-        });
-        navigation.navigate('MainTabs');
+    const logData = () => {
+        console.log("name:", name);
+        console.log("lastName:", lastName);
+        console.log("birthDate:", birthDate);
+        console.log("email:", email);
+        console.log("phone:", phone);
+        console.log("profilePhotoUri:", profilePhotoUri);
     }
+
+    const handleUpdate = async () => {
+        const formData = new FormData();
+
+        formData.append('userID', user.idUser.toString());
+        formData.append('firstName', name);
+        formData.append('lastName', lastName);
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('birthDate', birthDate.slice(0, 10));
+
+        try {
+            console.log("Actualizando usuario:", formData);
+
+            const response = await fetch(URL, {
+                method: 'PUT',
+                body: formData as any,
+            });
+
+            if (!response.ok) {
+                Alert.alert("Error", "Intente de nuevo");
+                const errorText = await response.text();
+                throw new Error(`Error ${response.status}: ${errorText || 'Error desconocido'}`);
+            }
+
+            Alert.alert("Actualizacion exitosa", "Se actualizaron correctamente");
+            console.log("Actualizacion exitosa: Se actualizaron correctamente");
+
+        } catch (error: any) {
+            console.error("Error al enviar la reseña:", error.message);
+
+            Alert.alert("Error", "Intente de nuevo");
+        }
+        // navigation.navigate('MainTabs');
+    }
+
+    const handleDelete = async () => {
+        Alert.alert('¿Estas seguro?', 'Esta accion eliminará todos tus datos', [
+            {
+                text: 'Cancelar',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'Eliminar', onPress: async () => {
+                    console.log('OK Pressed')
+                    deleteUser()
+                },
+                style: 'destructive',
+            },
+        ]);
+    }
+
+    const deleteUser = async () => {
+        try {
+            const deleteURL = API_URL + 'edit/' + user.idUser.toString()
+
+            const response = await fetch(deleteURL, { method: 'DELETE' });
+
+             if (!response.ok) {
+                 Alert.alert("Error", "Intente de nuevo");
+            }
+        } catch (error) {
+
+        }
+    }
+
 
     const handleAttachPhoto = () => {
         // placeholder
@@ -44,11 +113,56 @@ export default function Profile() {
         setDatePickerVisibility(false);
     };
 
-    const handleConfirm = (date) => {
+    // Date
+    const handleConfirm = (date: any) => {
         console.warn("A date has been picked: ", date);
         setBirthDate(date);
         hideDatePicker();
     };
+
+    useEffect(() => {
+        if (!user.idUser) {
+            console.log("ALARMA ALARMALA DE TOS, UNO DOS TRES, PATADA Y TOS");
+
+        }
+
+        const loadUserInfo = async () => {
+            try {
+                const response = await fetch(URL + "/" + user.idUser.toString())
+
+                if (!response.ok) {
+                    Alert.alert("Error", "Intente de nuevo");
+                }
+
+                const data: any = await response.json();
+
+                if (!data.success) {
+                    Alert.alert("Error", "Intente de nuevo");
+                    console.log(data.message, ":", data.error);
+                    return;
+                }
+
+                // console.log("data:", data.data);
+
+                setName(data.data.firstName);
+                setLastName(data.data.lastName);
+                setBirthDate(data.data.birthDate);
+                setEmail(data.data.email);
+                setPhone(data.data.phone.toString());
+                // setProfilePhotoUri(data.data.pfpFileName);
+
+            } catch (err: any) {
+                console.log(err.message);
+                Alert.alert("Error", "Intente de nuevo");
+                // setError('¡Vaya! Ocurrió un error')
+            }
+        }
+        console.log("User ID:", user.idUser);
+
+        loadUserInfo();
+        // logData();
+
+    }, []);
 
     return (
 
@@ -89,8 +203,11 @@ export default function Profile() {
                 <View style={styles.dateInputContainer}>
                     <TextInput
                         style={styles.dateInput}
-                        placeholder={birthDate}
-                        value={birthDate}
+                        // placeholder={birthDate}
+                        value={
+                            new Date(birthDate)
+                                .toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric" })
+                        }
                         onChangeText={setBirthDate}
                         keyboardType="numeric"
                     />
@@ -158,7 +275,16 @@ export default function Profile() {
                     onPress={handleUpdate}
                 >
                     <Text style={styles.signupButtonText}>
-                        Registrarse
+                        Guardar cambios
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={handleDelete}
+                >
+                    <Text style={styles.signupButtonText}>
+                        Eliminar cuenta
                     </Text>
                 </TouchableOpacity>
             </ScrollView>
@@ -249,6 +375,15 @@ const styles = StyleSheet.create({
     // --- SIGNUP ---
     signupButton: {
         backgroundColor: '#2A5C8C',
+        paddingVertical: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 30,
+        width: '70%',
+    },
+    deleteButton: {
+        backgroundColor: '#e73535ff',
         paddingVertical: 10,
         borderRadius: 10,
         alignItems: 'center',

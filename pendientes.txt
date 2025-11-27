@@ -5,11 +5,11 @@ Damian
 - Login 
     Conect backend
 
-- Scroll profile
 
 -------------------------------------------------------------------------------
 Done: 
 - conexion con backend en celular
+- Scroll profile
 
 -------------------------------------------------------------------------------
 Lus
