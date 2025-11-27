@@ -7,6 +7,7 @@ import Search from '../screens/Search';
 import WorkerProfile from '../screens/WorkerProfile';
 import Review from '../screens/Review';
 import Profile from '../screens/Profile';
+import ClientSignup from '../screens/ClientSignup';
 
 const RootStack = createStackNavigator();
 
@@ -74,6 +75,13 @@ export default function RootNavigator() {
                         fontFamily: 'Inter_400Regular'
                     },
                     title: 'Regresar al perfil'
+                }}
+            />
+            <RootStack.Screen
+                name='ClientSignup'
+                component={ClientSignup}
+                options={{
+                    headerShown: false
                 }}
             />
             {/* <RootStack.Screen
