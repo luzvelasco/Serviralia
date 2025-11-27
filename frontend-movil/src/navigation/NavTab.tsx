@@ -61,7 +61,21 @@ export default function NavTab() {
             </Tab.Screen>
             <Tab.Screen
                 name="FAQ"
-                component={FAQ}>
+                component={FAQ}
+                options={{
+                    headerTintColor: 'white',
+                    headerStyle: {
+                        backgroundColor: '#2A5C8C',
+                        height: 120
+                    },
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontSize: 24,
+                        fontWeight: '400',
+                        fontFamily: 'Inter_400Regular'
+                    },
+                    title: 'Preguntas frecuentes'
+                }}>
             </Tab.Screen>
         </Tab.Navigator>
     )

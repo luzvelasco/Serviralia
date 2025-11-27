@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 2, // Pequeño padding para aumentar el área de toque
     },
     starIcon: {
-        paddingHorizontal: 2
+        paddingHorizontal: 1.5
     }
 });
 

@@ -4,6 +4,7 @@ import { API_URL, ReviewScreenRouteProp, RootStackParamList } from "../types/nav
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import PrettyStars from "../components/PrettyStars";
+import ImagePicker from "../components/ImagePicker";
 
 const SKILL_MAP: { [key: string]: number } = {
 
@@ -47,6 +48,7 @@ export default function Review() {
 
     const handleAttachPhoto = () => {
         // placeholder
+
         if (photos.length < 2) {
             setPhotos([...photos, `https://placehold.co/100x100/A0A0A0/FFFFFF?text=Foto ${photos.length + 1}`]);
         } else {
@@ -182,6 +184,7 @@ export default function Review() {
                     {/* --- 4. ATTACH PICS --- */}
 
                     <View style={styles.photoSection}>
+                        {/* <ImagePicker /> */}
                         <TouchableOpacity
                             style={styles.attachButton}
                             onPress={handleAttachPhoto}

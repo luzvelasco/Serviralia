@@ -1,27 +1,51 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Review } from "../types/profile";
 import PrettyStars from "./PrettyStars";
+import { API_URL } from "../types/navigation";
 
 interface ReviewCardProps {
     review: Review;
 }
 
 export default function ReviewCard({ review }: ReviewCardProps) {
+
+    const showImage = review.pfpFileName && review.pfpFileName.length > 0;
+
+    const dateReview = (dateString: any) => {
+        const month = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        let d = new Date(dateString);
+
+        return month[d.getMonth()] + " " + d.getFullYear();
+
+    }
+
     return (
         <View style={styles.cardContainer}>
             <View style={styles.header}>
-                <View style={styles.iconPlaceholder}>
-                    <Text style={styles.iconText}>
-                        {review.username[0]}
-                    </Text>
-                </View>
+
+                {showImage ? (
+                    <Image
+                        source={{ uri: API_URL + '/images/' + review.pfpFileName }}
+                        style={styles.profileImage}
+                        resizeMode="cover"
+                        onError={(e) => console.log('Error al cargar icon:', e.nativeEvent.error)}
+                    />
+                ) : (
+                    <View style={styles.iconPlaceholder}>
+                        <Text style={styles.iconText}>
+                            {review.username[0]}
+                        </Text>
+                    </View>
+                )}
 
                 <View style={styles.userInfo}>
                     <Text style={styles.reviewerName}>{
                         review.username}
                     </Text>
                     <Text style={styles.reviewDate}>
-                        Publicado en {review.date}
+                        Publicado en {dateReview(review.date)}
                     </Text>
                 </View>
 
@@ -33,12 +57,32 @@ export default function ReviewCard({ review }: ReviewCardProps) {
             </View>
 
             <View style={styles.ratingAndComment}>
-                <PrettyStars rating={review.rating} size={14}/>
+                <PrettyStars rating={review.rating} size={14} />
                 <Text style={styles.comment}>
                     {review.review}
 
                 </Text>
             </View>
+            {/* --- GALERÍA DE IMÁGENES --- */}
+            {review.gallery && review.gallery.length > 0 && (
+                <View style={styles.galleryContainer}>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.galleryScroll}
+                    >
+                        {review.gallery.map((uri, index) => (
+                            <Image
+                                key={index}
+                                source={{ uri: API_URL + '/images/' + uri }}
+                                style={styles.galleryImage}
+                                resizeMode="cover"
+                                onError={() => console.log(`Error al cargar imagen: ${uri}`)}
+                            />
+                        ))}
+                    </ScrollView>
+                </View>
+            )}
         </View>
     );
 }
@@ -76,6 +120,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#666',
     },
+    profileImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+        backgroundColor: '#DDD', // Por si la imagen tarda en cargar
+    },
     userInfo: {
         flex: 1,
     },
@@ -96,9 +147,6 @@ const styles = StyleSheet.create({
     },
     skill: {
         borderRadius: 16,
-        // width: 150,
-        // justifyContent: 'center',
-        // alignItems: 'center',
         paddingVertical: 6,
         paddingHorizontal: 12,
         color: 'white',
@@ -116,5 +164,19 @@ const styles = StyleSheet.create({
         color: 'black',
         marginTop: 5,
         lineHeight: 20,
-    }
+    },
+    galleryContainer: {
+        marginTop: 15,
+        paddingLeft: 50,
+    },
+    galleryScroll: {
+        // Estilos para el contenedor del scroll horizontal
+    },
+    galleryImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 8,
+        marginRight: 10,
+        backgroundColor: '#E0E0E0',
+    },
 });
