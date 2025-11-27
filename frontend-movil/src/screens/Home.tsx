@@ -185,4 +185,3 @@ const styles = StyleSheet.create({
         fontFamily: 'Inter_500Medium'
     }
 })
-

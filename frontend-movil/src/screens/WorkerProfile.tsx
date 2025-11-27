@@ -8,7 +8,6 @@ import ReviewCard from "../components/ReviewCard";
 
 const { width } = Dimensions.get('window');
 
-
 export default function WorkerProfile() {
 
     const route = useRoute<WorkerProfileProps>();
@@ -79,7 +78,7 @@ export default function WorkerProfile() {
         )
     }
 
-    if (error || !profileData) {
+    if (error || (!profileData)) {
         return (
             <View style={[styles.container, styles.centerContent]}>
                 <Text style={styles.errorMessage}>{error || "Error al cargar el perfil."}</Text>
@@ -101,89 +100,96 @@ export default function WorkerProfile() {
         <View style={styles.container} >
             {/* <ScrollView style={styles.scroll} > */}
 
-                {/* INFORMACIÓN GENERAL */}
-                <View style={styles.mainInfo}>
-                    <Image
-                        style={styles.pfpImage}
-                        source={{ uri: API_URL + '/images/' + info.pfpFileName }}
-                    />
-                    <View style={styles.nameContainer}>
-                        <Text style={styles.workerName}>
-                            {info.fullName}
+            {/* INFORMACIÓN GENERAL */}
+            <View style={styles.mainInfo}>
+                <Image
+                    style={styles.pfpImage}
+                    source={{ uri: API_URL + '/images/' + info.pfpFileName }}
+                />
+                <View style={styles.nameContainer}>
+                    <Text style={styles.workerName}>
+                        {info.fullName}
+                    </Text>
+                    <View style={styles.ratingRow}>
+                        <Text style={styles.overallRating}>{
+                            info.reviewAverage}
                         </Text>
-                        <View style={styles.ratingRow}>
-                            <Text style={styles.overallRating}>{
-                                info.reviewAverage}
-                            </Text>
-                            <PrettyStars rating={info.reviewAverage} />
-                            <Text style={styles.totalReviewsText}>
-                                {info.totalReviews}
-                                {info.totalReviews === 1 ? ' reseña' : ' reseñas'}
-                            </Text>
-                        </View>
-                        <View style={styles.skillTagsContainer}>
-
-                            {info.skills.map((skill: string, index: number) => (
-                                <Text style={styles.skill} key={index}>{skill}</Text>
-                            ))}
-                        </View>
+                        <PrettyStars rating={info.reviewAverage} size={16}/>
+                        <Text style={styles.totalReviewsText}>
+                            {info.totalReviews}
+                            {info.totalReviews === 1 ? ' reseña' : ' reseñas'}
+                        </Text>
                     </View>
+                    <View style={styles.skillTagsContainer}>
 
+                        {info.skills.map((skill: string, index: number) => (
+                            <Text style={styles.skill} key={index}>{skill}</Text>
+                        ))}
+                    </View>
                 </View>
 
-                {/* PORTAFOLIO */}
-                {info.gallery.length > 0 && (
-                    <View style={styles.portfolioContainer}>
-                        {/* Imagen principal del portafolio */}
-                        <Image
-                            style={styles.portfolioImage}
-                            source={{ uri: API_URL + '/images/' + info.gallery[0] }}
-                        />
-                    </View>
-                )}
+            </View>
 
-                {/* BOTÓN DE CONTACTO */}
-                <TouchableOpacity style={styles.contactButton}>
-                    <Text style={styles.contactButtonText}>
-                        Contactar
-                    </Text>
-                </TouchableOpacity>
-
-                {/* BIOGRAFÍA */}
-                <View style={styles.descriptionContainer}>
-                    <Text style={styles.descriptionText}>
-                        {info.biography}
-                    </Text>
+            {/* PORTAFOLIO */}
+            {info.gallery.length > 0 && (
+                <View style={styles.portfolioContainer}>
+                    {/* Imagen principal del portafolio */}
+                    <Image
+                        style={styles.portfolioImage}
+                        source={{ uri: API_URL + '/images/' + info.gallery[0] }}
+                    />
                 </View>
+            )}
 
-                {/* --- SEPARADOR --- */}
-                <View style={styles.separator} />
-                {/* RESEÑAS */}
-                <Text style={styles.reviewsTitle}>
-                    Reseñas de clientes
+            {/* BOTÓN DE CONTACTO */}
+            <TouchableOpacity style={styles.contactButton}>
+                <Text style={styles.contactButtonText}>
+                    Contactar
                 </Text>
+            </TouchableOpacity>
 
-                {/* ---------- RESEÑA GENERAL ---------- */}
-                {generalRating && renderSkillRating(generalRating, true)}
+            {/* BIOGRAFÍA */}
+            <View style={styles.descriptionContainer}>
+                <Text style={styles.descriptionText}>
+                    {info.biography}
+                </Text>
+            </View>
 
-                {/* ---------- SKILL RATINGS ESPECÍFICAS ---------- */}
-                <View style={styles.specificSkillsContainer}>
-                    {specificRatings.map(skill => renderSkillRating(skill, false))}
-                </View>
+            {/* --- SEPARADOR --- */}
+            <View style={styles.separator} />
+            {/* RESEÑAS */}
+            <Text style={styles.reviewsTitle}>
+                Reseñas de clientes
+            </Text>
 
-                {/* ---------- BOTÓN ESCRIBIR RESEÑA ---------- */}
-                <TouchableOpacity style={styles.writeReviewButton}>
-                    <Text style={styles.writeReviewButtonText}>
-                        Escribir Reseña
-                    </Text>
-                </TouchableOpacity>
+            {/* ---------- RESEÑA GENERAL ---------- */}
+            {generalRating && renderSkillRating(generalRating, true)}
 
-                {/* ---------- LISTA DE RESEÑAS ---------- */}
-                <View style={styles.reviewsList}>
-                    {reviews.map(review => (
-                        <ReviewCard key={review.id} review={review} />
-                    ))}
-                </View>
+            {/* ---------- SKILL RATINGS ESPECÍFICAS ---------- */}
+            <View style={styles.specificSkillsContainer}>
+                {specificRatings.map(skill => renderSkillRating(skill, false))}
+            </View>
+
+            {/* ---------- BOTÓN ESCRIBIR RESEÑA ---------- */}
+            <TouchableOpacity
+                style={styles.writeReviewButton}
+                onPress={() => navigation.navigate(
+                    'Review', {
+                    workerId: workerId,
+                    workerSkills: profileData.info.skills
+                }
+                )}>
+                <Text style={styles.writeReviewButtonText}>
+                    Escribir Reseña
+                </Text>
+            </TouchableOpacity>
+
+            {/* ---------- LISTA DE RESEÑAS ---------- */}
+            <View style={styles.reviewsList}>
+                {reviews.map(review => (
+                    <ReviewCard key={review.id} review={review} />
+                ))}
+            </View>
             {/* </ScrollView> */}
         </View>
     )
@@ -264,7 +270,7 @@ const styles = StyleSheet.create({
     ratingRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 5,
+        marginVertical: 5
     },
     overallRating: {
         fontSize: 16,

@@ -12,7 +12,7 @@ export default function NavTab() {
         <Tab.Navigator
             initialRouteName="Home"
             screenOptions={({ route }) => ({
-                headerShown: false,
+                // headerShown: false,
                 tabBarShowLabel: false,
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName: keyof typeof Ionicons.glyphMap;
@@ -43,7 +43,10 @@ export default function NavTab() {
             })}>
             <Tab.Screen
                 name="Home"
-                component={Home}>
+                component={Home}
+                options={{
+                    headerShown: false
+                }}>
             </Tab.Screen>
             <Tab.Screen
                 name="Leads"

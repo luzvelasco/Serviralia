@@ -33,7 +33,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
             </View>
 
             <View style={styles.ratingAndComment}>
-                <PrettyStars rating={review.rating} />
+                <PrettyStars rating={review.rating} size={14}/>
                 <Text style={styles.comment}>
                     {review.review}
 

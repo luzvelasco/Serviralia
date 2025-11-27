@@ -36,7 +36,7 @@ export default function ProfileCardList({ Profiles, onProfilePress }: ProfileCar
                     <View style={styles.reviewContainer}>
                         <Text style={styles.review}>{item.rating}</Text>
 
-                        <PrettyStars rating={item.rating} />
+                        <PrettyStars rating={item.rating} size={14} />
 
                         <Text style={styles.review}>
                             {item.totalReviews}
@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
     reviewContainer: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingBottom: 10
     },
     skill: {
         borderRadius: 16,
@@ -125,6 +126,4 @@ const styles = StyleSheet.create({
         fontFamily: 'Inter_400Regular',
         fontSize: 13
     }
-
-
 })
