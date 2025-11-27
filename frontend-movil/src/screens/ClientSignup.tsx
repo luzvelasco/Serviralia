@@ -49,7 +49,7 @@ export default function ClientSignup({ navigation }: ClientSignupProps) {
     
                 Alert.alert("Error", "Intente de nuevo");
             }
-            // navigation.navigate('MainTabs');
+            navigation.navigate('Login');
         }
 
     const handleAttachPhoto = () => {
