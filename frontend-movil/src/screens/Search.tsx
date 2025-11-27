@@ -109,9 +109,6 @@ export default function Search() {
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: 'white' }} contentContainerStyle={{ paddingBottom: 40 }}>
-            <Text>
-                Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto
-            </Text>
             <Image
                 style={{ width: '100%', height: 150 }}
                 source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }}
@@ -129,10 +126,6 @@ export default function Search() {
                     onProfilePress={handleWorkerSelection}
                 />
             )}
-
-            <Text>
-                Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto
-            </Text>
         </ScrollView>
     )
 }

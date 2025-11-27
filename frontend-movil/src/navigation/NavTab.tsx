@@ -48,10 +48,10 @@ export default function NavTab() {
                     headerShown: false
                 }}>
             </Tab.Screen>
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Leads"
                 component={Leads}>
-            </Tab.Screen>
+            </Tab.Screen> */}
             <Tab.Screen
                 name="Perfil"
                 component={Profile}

@@ -8,6 +8,7 @@ import WorkerProfile from '../screens/WorkerProfile';
 import Review from '../screens/Review';
 import Profile from '../screens/Profile';
 import ClientSignup from '../screens/ClientSignup';
+import WorkerSignup from '../screens/WorkerSignup';
 
 const RootStack = createStackNavigator();
 
@@ -81,6 +82,13 @@ export default function RootNavigator() {
             <RootStack.Screen
                 name='ClientSignup'
                 component={ClientSignup}
+                options={{
+                    headerShown: false
+                }}
+            />
+            <RootStack.Screen
+                name='WorkerSignup'
+                component={WorkerSignup}
                 options={{
                     headerShown: false
                 }}

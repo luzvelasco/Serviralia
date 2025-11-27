@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     },
     review: {
         fontSize: 13,
-        // paddingBottom: 1,
         marginHorizontal: 5,
         fontFamily: 'Inter_400Regular'
     },
@@ -118,9 +117,6 @@ const styles = StyleSheet.create({
     },
     skill: {
         borderRadius: 16,
-        // width: 150,
-        // justifyContent: 'center',
-        // alignItems: 'center',
         paddingVertical: 6,
         paddingHorizontal: 12,
         color: 'white',
