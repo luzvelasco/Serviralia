@@ -1,5 +1,17 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+import Constants from 'expo-constants';
+
+const extra = Constants.expoConfig?.extra as { apiUrl: string } | undefined;
+
+if (!extra) {
+  throw new Error("Expo extra.apiUrl is not defined");
+}
+
+export const API_URL = extra.apiUrl;
+// export const API_URL = 'http://localhost:3003/';
+// export const API_URL = 'http://192.168.1.72:3003/';
+
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -22,6 +34,4 @@ export type ReviewScreenRouteProp = RouteProp<RootStackParamList, 'Review'>;
 export type ClientSignupProps = StackScreenProps<RootStackParamList, 'ClientSignup'>;
 export type WorkerSignupProps = StackScreenProps<RootStackParamList, 'WorkerSignup'>;
 export type ProfileProps = RouteProp<RootStackParamList, 'Profile'>
-
-export const API_URL = 'http://localhost:3003/';
 
