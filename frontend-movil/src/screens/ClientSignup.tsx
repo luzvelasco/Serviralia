@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { ClientSignupProps } from "../types/navigation";
+import { API_URL, ClientSignupProps } from "../types/navigation";
 import Header from "../navigation/Header";
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 export default function ClientSignup({ navigation }: ClientSignupProps) {
+    const URL = API_URL + 'signup/client';
 
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -16,16 +17,40 @@ export default function ClientSignup({ navigation }: ClientSignupProps) {
     const [phone, setPhone] = useState('');
     const [profilePhotoUri, setProfilePhotoUri] = useState('');
 
-    const handleSignup = () => {
-        console.log('Datos de registro: ', {
-            name,
-            lastName,
-            email,
-            phone,
-            birthDate
-        });
-        navigation.replace('MainTabs');
-    }
+    const handleSignup = async () => {
+            const formData = new FormData();
+    
+            formData.append('firstName', name);
+            formData.append('lastName', lastName);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('birthDate', birthDate.slice(0, 10));
+            formData.append('password', password);
+    
+            try {
+                console.log("Registrando usuario:", formData);
+    
+                const response = await fetch(URL, {
+                    method: 'POST',
+                    body: formData as any,
+                });
+    
+                if (!response.ok) {
+                    Alert.alert("Error", "Intente de nuevo");
+                    const errorText = await response.text();
+                    throw new Error(`Error ${response.status}: ${errorText || 'Error desconocido'}`);
+                }
+    
+                Alert.alert("Registro exitoso");
+                console.log("Registro exitoso");
+    
+            } catch (error: any) {
+                console.error("Error al enviar la reseña:", error.message);
+    
+                Alert.alert("Error", "Intente de nuevo");
+            }
+            // navigation.navigate('MainTabs');
+        }
 
     const handleAttachPhoto = () => {
         // placeholder
@@ -42,7 +67,7 @@ export default function ClientSignup({ navigation }: ClientSignupProps) {
         setDatePickerVisibility(false);
     };
 
-    const handleConfirm = (date) => {
+    const handleConfirm = (date: any) => {
         console.warn("A date has been picked: ", date);
         setBirthDate(date);
         hideDatePicker();
@@ -87,7 +112,7 @@ export default function ClientSignup({ navigation }: ClientSignupProps) {
                 <View style={styles.dateInputContainer}>
                     <TextInput
                         style={styles.dateInput}
-                        placeholder="DD/MM/AAAA"
+                        placeholder="AAAA/MM/DD"
                         value={birthDate}
                         onChangeText={setBirthDate}
                         keyboardType="numeric"
