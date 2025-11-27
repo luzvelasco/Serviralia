@@ -1,10 +1,11 @@
 import { NavigationProp, useNavigation, useRoute } from "@react-navigation/native";
 import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { API_URL, ReviewScreenRouteProp, RootStackParamList } from "../types/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import PrettyStars from "../components/PrettyStars";
 import ImagePicker from "../components/ImagePicker";
+import { UserContext } from "../../App";
 
 const SKILL_MAP: { [key: string]: number } = {
 
@@ -17,10 +18,11 @@ const SKILL_MAP: { [key: string]: number } = {
 };
 
 const SKILLS = Object.keys(SKILL_MAP);
-const MOCK_CLIENT_ID = 1;
 
 export default function Review() {
-
+    const { user } = useContext(UserContext);
+    const CLIENT_ID = user.idUser;
+    
     const route = useRoute<ReviewScreenRouteProp>();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -80,7 +82,7 @@ export default function Review() {
         const formData = new FormData();
 
         formData.append('id_worker', workerId.toString());
-        formData.append('id_client', MOCK_CLIENT_ID.toString());
+        formData.append('id_client', CLIENT_ID.toString());
         formData.append('rating', rating.toString());
         formData.append('review', comment.trim());
         formData.append('skill', skillId.toString());
