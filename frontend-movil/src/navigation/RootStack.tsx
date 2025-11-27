@@ -47,7 +47,8 @@ export default function RootNavigator() {
                     headerBackButtonDisplayMode: "minimal",
                     headerTintColor: 'white',
                     headerStyle: {
-                        backgroundColor: '#2A5C8C'
+                        backgroundColor: '#2A5C8C',
+                        height: 120
                     },
                     headerTitleAlign: 'center',
                     headerTitleStyle: {

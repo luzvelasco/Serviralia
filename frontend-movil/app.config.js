@@ -22,6 +22,9 @@ export default {
     expo: {
         extra: {
             apiUrl: `http://${getLocalIP()}:3003/`
+        },
+        "android": {
+            "package": "com.anonymous.frontendmovil"
         }
     }
 };

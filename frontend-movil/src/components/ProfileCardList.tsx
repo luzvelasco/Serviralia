@@ -71,17 +71,20 @@ export default function ProfileCardList({ Profiles, onProfilePress }: ProfileCar
 
 const styles = StyleSheet.create({
     cardContainer: {
-        padding: 20,
+        padding: 15,
         borderRadius: 15,
         marginBottom: 30,
+        borderWidth: 0.5,
+        borderColor: '#E0E0E0',
         // marginHorizontal: 30,
         marginLeft: 30,
         marginRight: 30,
         // Sombra para iOS
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1
     },
     cardHeader: {
         flexDirection: 'row',

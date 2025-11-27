@@ -1,10 +1,11 @@
 import { NavigationProp, useNavigation, useRoute } from "@react-navigation/native";
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AccessibilityInfo, Alert, Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { API_URL, RootStackParamList, WorkerProfileProps } from "../types/navigation"
 import { useEffect, useState } from "react";
 import { Rating, WorkerProfileData } from "../types/profile";
 import PrettyStars from "../components/PrettyStars";
 import ReviewCard from "../components/ReviewCard";
+import Carousel from "pinar";
 
 const { width } = Dimensions.get('window');
 
@@ -56,26 +57,55 @@ export default function WorkerProfile() {
     const renderSkillRating = (ratingItem: Rating, isGeneral: boolean) => {
         const ratingValue = parseFloat(ratingItem.rating)
 
+        if (isGeneral) {
+            return (
+                <View
+                    key={ratingItem.id}
+                    style={[styles.skillGeneralContainer]}
+                >
+                    <Text style={styles.skillNameGeneral}>
+                        {ratingItem.skill}
+                    </Text>
+
+                    <View style={styles.generalRatingRow}>
+                        <Text style={styles.skillRatingGeneral}>
+                            {ratingValue.toFixed(1)}
+                        </Text>
+                        <PrettyStars
+                            rating={ratingValue}
+                            size={18} />
+                        <Text style={[
+                            styles.skillRatingGeneral,
+                            styles.reviewCountText]}>
+                            ({profileData?.info.totalReviews})
+                        </Text>
+                    </View>
+
+                </View>
+            );
+        }
+
         return (
             <View
                 key={ratingItem.id}
-                style={[
-                    styles.skillBar,
-                    isGeneral ? styles.skillGeneral : styles.skillSpecific
-                ]}>
-                <Text
-                    style={isGeneral ? styles.skillNameGeneral : styles.skillNameText}>
+                style={styles.skillSpecific}
+            >
+                <Text style={styles.skillNameText}>
                     {ratingItem.skill}
                 </Text>
+
                 <View style={styles.skillDetails}>
-                    <Text style={isGeneral ? styles.skillRatingGeneral : styles.skillRatingText}>
+                    <Text style={styles.skillRatingText}>
                         {ratingValue.toFixed(1)}
                     </Text>
-                    <PrettyStars rating={ratingValue} />
+                    <PrettyStars rating={ratingValue} size={14} />
+                    <Text style={styles.skillRatingText}>
+                        ({profileData?.info.totalReviews})
+                    </Text>
                 </View>
 
             </View>
-        )
+        );
     }
 
     if (error || (!profileData)) {
@@ -100,96 +130,112 @@ export default function WorkerProfile() {
         <View style={styles.container} >
             <ScrollView style={styles.scroll} >
 
-            {/* INFORMACIÓN GENERAL */}
-            <View style={styles.mainInfo}>
-                <Image
-                    style={styles.pfpImage}
-                    source={{ uri: API_URL + '/images/' + info.pfpFileName }}
-                />
-                <View style={styles.nameContainer}>
-                    <Text style={styles.workerName}>
-                        {info.fullName}
-                    </Text>
-                    <View style={styles.ratingRow}>
-                        <Text style={styles.overallRating}>{
-                            info.reviewAverage}
-                        </Text>
-                        <PrettyStars rating={info.reviewAverage} size={16}/>
-                        <Text style={styles.totalReviewsText}>
-                            {info.totalReviews}
-                            {info.totalReviews === 1 ? ' reseña' : ' reseñas'}
-                        </Text>
-                    </View>
-                    <View style={styles.skillTagsContainer}>
-
-                        {info.skills.map((skill: string, index: number) => (
-                            <Text style={styles.skill} key={index}>{skill}</Text>
-                        ))}
-                    </View>
-                </View>
-
-            </View>
-
-            {/* PORTAFOLIO */}
-            {info.gallery.length > 0 && (
-                <View style={styles.portfolioContainer}>
-                    {/* Imagen principal del portafolio */}
+                {/* INFORMACIÓN GENERAL */}
+                <View style={styles.mainInfo}>
                     <Image
-                        style={styles.portfolioImage}
-                        source={{ uri: API_URL + '/images/' + info.gallery[0] }}
+                        style={styles.pfpImage}
+                        source={{ uri: API_URL + '/images/' + info.pfpFileName }}
                     />
+                    <View style={styles.nameContainer}>
+                        <Text style={styles.workerName}>
+                            {info.fullName}
+                        </Text>
+                        <View style={styles.ratingRow}>
+                            <Text style={styles.overallRating}>{
+                                info.reviewAverage}
+                            </Text>
+                            <PrettyStars rating={info.reviewAverage} size={16} />
+                            <Text style={styles.totalReviewsText}>
+                                {info.totalReviews}
+                                {info.totalReviews === 1 ? ' reseña' : ' reseñas'}
+                            </Text>
+                        </View>
+                        <View style={styles.skillTagsContainer}>
+
+                            {info.skills.map((skill: string, index: number) => (
+                                <Text style={styles.skill} key={index}>{skill}</Text>
+                            ))}
+                        </View>
+                    </View>
+
                 </View>
-            )}
 
-            {/* BOTÓN DE CONTACTO */}
-            <TouchableOpacity style={styles.contactButton}>
-                <Text style={styles.contactButtonText}>
-                    Contactar
+                {/* PORTAFOLIO */}
+
+                <View >
+                    <Carousel
+                        autoplay={true}
+                        loop={true}
+                        showsControls={false}
+                        mergeStyles={true}
+                        height={400}
+                        onIndexChanged={({ index, total }): void => {
+                            if (Platform.OS === "ios") {
+                                const page = index + 1;
+                                AccessibilityInfo.announceForAccessibility(
+                                    `Changed to page ${page}/${total}`
+                                );
+                            }
+                        }}
+                    >
+                        {info.gallery.map((image, key) => {
+                            return (
+                                <View
+                                    style={styles.portfolioContainer}
+                                    key={key}
+                                >
+                                    <Image
+                                        style={styles.portfolioImage}
+                                        source={{ uri: API_URL + '/images/' + image }}
+                                    />
+                                </View>
+                            );
+                        })}
+                    </Carousel>
+                </View>
+
+                {/* BIOGRAFÍA */}
+                <View style={styles.descriptionContainer}>
+                    <Text style={styles.descriptionText}>
+                        {info.biography}
+                    </Text>
+                </View>
+
+                {/* --- SEPARADOR --- */}
+                <View style={styles.separator} />
+                {/* RESEÑAS */}
+                <Text style={styles.reviewsTitle}>
+                    Reseñas de clientes
                 </Text>
-            </TouchableOpacity>
 
-            {/* BIOGRAFÍA */}
-            <View style={styles.descriptionContainer}>
-                <Text style={styles.descriptionText}>
-                    {info.biography}
-                </Text>
-            </View>
+                {/* ---------- RESEÑA GENERAL ---------- */}
+                {generalRating && renderSkillRating(generalRating, true)}
 
-            {/* --- SEPARADOR --- */}
-            <View style={styles.separator} />
-            {/* RESEÑAS */}
-            <Text style={styles.reviewsTitle}>
-                Reseñas de clientes
-            </Text>
+                {/* ---------- SKILL RATINGS ESPECÍFICAS ---------- */}
+                <View style={styles.specificSkillsContainer}>
+                    {specificRatings.map(skill => renderSkillRating(skill, false))}
+                </View>
 
-            {/* ---------- RESEÑA GENERAL ---------- */}
-            {generalRating && renderSkillRating(generalRating, true)}
+                {/* ---------- BOTÓN ESCRIBIR RESEÑA ---------- */}
+                <TouchableOpacity
+                    style={styles.writeReviewButton}
+                    onPress={() => navigation.navigate(
+                        'Review', {
+                        workerId: workerId,
+                        workerSkills: profileData.info.skills
+                    }
+                    )}>
+                    <Text style={styles.writeReviewButtonText}>
+                        Escribir Reseña
+                    </Text>
+                </TouchableOpacity>
 
-            {/* ---------- SKILL RATINGS ESPECÍFICAS ---------- */}
-            <View style={styles.specificSkillsContainer}>
-                {specificRatings.map(skill => renderSkillRating(skill, false))}
-            </View>
-
-            {/* ---------- BOTÓN ESCRIBIR RESEÑA ---------- */}
-            <TouchableOpacity
-                style={styles.writeReviewButton}
-                onPress={() => navigation.navigate(
-                    'Review', {
-                    workerId: workerId,
-                    workerSkills: profileData.info.skills
-                }
-                )}>
-                <Text style={styles.writeReviewButtonText}>
-                    Escribir Reseña
-                </Text>
-            </TouchableOpacity>
-
-            {/* ---------- LISTA DE RESEÑAS ---------- */}
-            <View style={styles.reviewsList}>
-                {reviews.map(review => (
-                    <ReviewCard key={review.id} review={review} />
-                ))}
-            </View>
+                {/* ---------- LISTA DE RESEÑAS ---------- */}
+                <View style={styles.reviewsList}>
+                    {reviews.map(review => (
+                        <ReviewCard key={review.id} review={review} />
+                    ))}
+                </View>
             </ScrollView>
         </View>
     )
@@ -291,9 +337,6 @@ const styles = StyleSheet.create({
     },
     skill: {
         borderRadius: 16,
-        // width: 150,
-        // justifyContent: 'center',
-        // alignItems: 'center',
         paddingVertical: 6,
         paddingHorizontal: 12,
         color: 'white',
@@ -302,7 +345,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontFamily: 'Inter_400Regular',
         fontSize: 13,
-        // overflow: 'hidden'
     },
 
     // --- GALLERY ---
@@ -318,21 +360,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#E0E0E0',
         resizeMode: 'cover',
         borderRadius: 8,
-    },
-    // --- CONTACT ---
-    contactButton: {
-        backgroundColor: '#FFC107',
-        borderRadius: 12,
-        paddingVertical: 15,
-        marginHorizontal: 25,
-        marginTop: 25,
-        marginBottom: 20,
-    },
-    contactButtonText: {
-        color: 'black',
-        fontSize: 18,
-        textAlign: 'center',
-        fontFamily: 'Inter_500Medium',
     },
 
     // --- BIO ---
@@ -364,14 +391,44 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: 'black',
         paddingHorizontal: 20,
-        paddingTop: 0,
-        paddingBottom: 10,
+        paddingTop: 15,
+        paddingBottom: 15,
         backgroundColor: 'white',
         fontFamily: 'Inter_500Medium',
     },
 
     // --- SKILL REVS ---
 
+    skillGeneralContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    skillNameGeneral: {
+        fontSize: 20,
+        fontFamily: 'Inter_400Regular',
+        color: 'black',
+        marginBottom: 15,
+    },
+    generalRatingRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    skillRatingGeneral: {
+        fontSize: 18,
+        fontFamily: 'Inter_400Regular',
+        color: 'black',
+        marginRight: 10,
+    },
+    reviewCountText: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        color: '#333',
+        marginLeft: 5,
+    },
+    skillDetails: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     skillBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -381,47 +438,40 @@ const styles = StyleSheet.create({
     },
     skillGeneral: {
         backgroundColor: 'white',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        maxWidth: '50%'
     },
     skillSpecific: {
+        flexDirection: 'row',
         backgroundColor: '#2A5C8C',
+        borderRadius: 10,
+        width: '80%',
+        alignSelf: 'center',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+        padding: 14
     },
     skillNameText: {
         fontSize: 16,
         fontWeight: 'normal',
         color: 'white',
         fontFamily: 'Inter_400Regular',
-    },
-    skillNameGeneral: {
-        fontSize: 20,
-        color: 'black',
-        fontFamily: 'Inter_400Regular',
-    },
-    skillDetails: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        // backgroundColor: '#',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 4,
+        marginRight: 20,
+        flex: 1
     },
     skillRatingText: {
         fontSize: 16,
         color: 'white',
-        marginRight: 5,
+        marginHorizontal: 5,
         fontFamily: 'Inter_400Regular',
-    },
-    skillRatingGeneral: {
-        fontSize: 18,
-        color: 'black',
-        marginRight: 5,
-        fontFamily: 'Inter_400Regular',
+        alignSelf: 'center',
     },
     specificSkillsContainer: {
         backgroundColor: 'white',
         borderBottomWidth: 1,
         borderBottomColor: 'white',
-        paddingBottom: 10,
+        paddingBottom: 10
     },
 
     // --- WRITE REV ---
