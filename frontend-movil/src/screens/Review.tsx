@@ -284,6 +284,7 @@ const styles = StyleSheet.create({
     // IOS
     pickerItem: {
         height: 35,
+        width: '100%',
         color: 'black',
         fontFamily: 'Inter_400Regular',
         fontSize: 14
