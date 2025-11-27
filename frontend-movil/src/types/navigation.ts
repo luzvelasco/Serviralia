@@ -33,5 +33,5 @@ export type WorkerProfileProps = RouteProp<RootStackParamList, 'WorkerProfile'>
 export type ReviewScreenRouteProp = RouteProp<RootStackParamList, 'Review'>;
 export type ClientSignupProps = StackScreenProps<RootStackParamList, 'ClientSignup'>;
 export type WorkerSignupProps = StackScreenProps<RootStackParamList, 'WorkerSignup'>;
-export type ProfileProps = RouteProp<RootStackParamList, 'Profile'>
+export type ProfileProps = StackScreenProps<RootStackParamList, 'Profile'>
 

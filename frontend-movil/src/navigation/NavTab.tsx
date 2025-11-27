@@ -54,7 +54,10 @@ export default function NavTab() {
             </Tab.Screen>
             <Tab.Screen
                 name="Perfil"
-                component={Profile}>
+                component={Profile}
+                options={{
+                    headerShown: false
+                }}>
             </Tab.Screen>
             <Tab.Screen
                 name="FAQ"

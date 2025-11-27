@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation, useRoute } from "@react-navigation/native";
-import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { API_URL, ReviewScreenRouteProp, RootStackParamList } from "../types/navigation";
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -131,102 +131,107 @@ export default function Review() {
             keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
         >
             <View style={styles.header}>
-                <Text style={styles.title}>
-                    Escribir reseña
-                </Text>
+                <ScrollView
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <Text style={styles.title}>
+                        Escribir reseña
+                    </Text>
 
-                {/* --- SKILL PICKER --- */}
+                    {/* --- SKILL PICKER --- */}
 
-                <Text style={styles.label}>Categoría</Text>
-                <View style={styles.pickerContainer}>
-                    <Picker
-                        selectedValue={selectedSkill}
-                        style={styles.picker}
-                        onValueChange={(itemValue) => setSelectedSkill(itemValue)}
-                        itemStyle={styles.pickerItem}
-                    >
-                        {availableSkills.map((skill) => (
-                            <Picker.Item key={skill} label={skill} value={skill} />
-                        ))}
-                    </Picker>
-                </View>
+                    <Text style={styles.label}>Categoría</Text>
+                    <View style={styles.pickerContainer}>
+                        <Picker
+                            selectedValue={selectedSkill}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setSelectedSkill(itemValue)}
+                            itemStyle={styles.pickerItem}
+                        >
+                            {availableSkills.map((skill) => (
+                                <Picker.Item key={skill} label={skill} value={skill} />
+                            ))}
+                        </Picker>
+                    </View>
 
-                {/* --- 2. RATING --- */}
+                    {/* --- 2. RATING --- */}
 
-                <Text style={styles.label}>
-                    Valoración
-                </Text>
-                <View style={styles.ratingContainer}>
-                    <PrettyStars rating={rating} onRate={setRating} isEditable={true}/>
-                </View>
+                    <Text style={styles.label}>
+                        Valoración
+                    </Text>
+                    <View style={styles.ratingContainer}>
+                        <PrettyStars rating={rating} onRate={setRating} isEditable={true} />
+                    </View>
 
-                {/* --- 3. REVIEW --- */}
+                    {/* --- 3. REVIEW --- */}
 
-                <Text style={styles.label}>
-                    Comentario
-                </Text>
-                <TextInput
-                    style={styles.commentInput}
-                    placeholder="Describe tu experiencia con el servicio: ¿Qué te gustó? ¿El resultado cumplió con tus expectativas?"
-                    multiline={true}
-                    numberOfLines={4}
-                    value={comment}
-                    onChangeText={setComment}
-                    editable={!isSubmitting}
-                />
+                    <Text style={styles.label}>
+                        Comentario
+                    </Text>
+                    <TextInput
+                        style={styles.commentInput}
+                        placeholder="Describe tu experiencia con el servicio: ¿Qué te gustó? ¿El resultado cumplió con tus expectativas?"
+                        multiline={true}
+                        numberOfLines={4}
+                        value={comment}
+                        onChangeText={setComment}
+                        editable={!isSubmitting}
+                    />
 
-                {/* --- 4. ATTACH PICS --- */}
+                    {/* --- 4. ATTACH PICS --- */}
 
-                <View style={styles.photoSection}>
+                    <View style={styles.photoSection}>
+                        <TouchableOpacity
+                            style={styles.attachButton}
+                            onPress={handleAttachPhoto}
+                            disabled={isSubmitting || photos.length >= 2}
+                        >
+                            {/* emoji por ahora */}
+                            <Text style={styles.attachButtonIcon}>
+                                📎
+                            </Text>
+                            <Text style={styles.attachButtonText}>
+                                Adjuntar foto
+                            </Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.photoPreviewContainer}>
+                            {photos.map((uri, index) => (
+                                <View key={index} style={styles.photoWrapper}>
+                                    <Image
+                                        source={{ uri: uri }}
+                                        style={styles.photoThumbnail} />
+                                    <TouchableOpacity
+                                        style={styles.removePhoto}
+                                        onPress={() => handleRemovePhoto(index)}
+                                        disabled={isSubmitting}
+                                    >
+                                        <Text style={styles.removePhotoText}>
+                                            X
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                            {/* placeholder en caso de foto vacía (si hay menos de 2) */}
+                            {photos.length < 2 && (
+                                <View style={styles.photoPlaceholder} />
+                            )}
+                        </View>
+                    </View>
+
+                    {/* --- 5. SEND --- */}
+
                     <TouchableOpacity
-                        style={styles.attachButton}
-                        onPress={handleAttachPhoto}
-                        disabled={isSubmitting || photos.length >= 2}
+                        style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
+                        onPress={handleSubmitReview}
+                        disabled={isSubmitting}
                     >
-                        {/* emoji por ahora */}
-                        <Text style={styles.attachButtonIcon}>
-                            📎
-                        </Text>
-                        <Text style={styles.attachButtonText}>
-                            Adjuntar foto
+                        <Text style={styles.submitButtonText}>
+                            {isSubmitting ? 'Enviando...' : 'Enviar'}
                         </Text>
                     </TouchableOpacity>
-
-                    <View style={styles.photoPreviewContainer}>
-                        {photos.map((uri, index) => (
-                            <View key={index} style={styles.photoWrapper}>
-                                <Image
-                                    source={{ uri: uri }}
-                                    style={styles.photoThumbnail} />
-                                <TouchableOpacity
-                                    style={styles.removePhoto}
-                                    onPress={() => handleRemovePhoto(index)}
-                                    disabled={isSubmitting}
-                                >
-                                    <Text style={styles.removePhotoText}>
-                                        X
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                        {/* placeholder en caso de foto vacía (si hay menos de 2) */}
-                        {photos.length < 2 && (
-                            <View style={styles.photoPlaceholder} />
-                        )}
-                    </View>
-                </View>
-
-                {/* --- 5. SEND --- */}
-
-                <TouchableOpacity
-                    style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
-                    onPress={handleSubmitReview}
-                    disabled={isSubmitting}
-                >
-                    <Text style={styles.submitButtonText}>
-                        {isSubmitting ? 'Enviando...' : 'Enviar'}
-                    </Text>
-                </TouchableOpacity>
+                </ScrollView>
             </View>
         </KeyboardAvoidingView>
     )
@@ -276,10 +281,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         paddingHorizontal: 10,
     },
-    // Estilo específico para iOS para asegurar visibilidad
+    // IOS
     pickerItem: {
-        height: 45,
-
+        height: 35,
+        width: '100%',
+        color: 'black',
+        fontFamily: 'Inter_400Regular',
+        fontSize: 14
     },
 
     // --- Rating ---
