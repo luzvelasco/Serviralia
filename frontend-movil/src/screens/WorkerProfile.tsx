@@ -98,7 +98,7 @@ export default function WorkerProfile() {
 
     return (
         <View style={styles.container} >
-            {/* <ScrollView style={styles.scroll} > */}
+            <ScrollView style={styles.scroll} >
 
             {/* INFORMACIÓN GENERAL */}
             <View style={styles.mainInfo}>
@@ -190,7 +190,7 @@ export default function WorkerProfile() {
                     <ReviewCard key={review.id} review={review} />
                 ))}
             </View>
-            {/* </ScrollView> */}
+            </ScrollView>
         </View>
     )
 }
