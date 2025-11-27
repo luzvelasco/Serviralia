@@ -14,7 +14,7 @@ Lus
 
 - Sign up (cliente)
     maquetado
-    
+
 BUGS VISUALES
 
 
@@ -32,26 +32,6 @@ BUGS VISUALES
 
 -------------------------------------------------------------------------------
 
-
-
-
 - Sign up (cliente)
     maquetado
     backend
-
-BUGS VISUALES
-
-
-- Resumen de reseñas (perfil)
-    - separar califación y texto por línea
-    - contenedor de califaciones por skill
-
-- Cambiar todos los placeholders
-    - review
-- Skill Picker
-    - tamaño al abrir
-- slide worker gallery
-- format review date 
-- pfp cliente del review
-
-
