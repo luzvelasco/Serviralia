@@ -11,7 +11,7 @@ export type RootStackParamList = {
   Review: { workerId: number, workerSkills: string[]};
   WorkerSignup: undefined;
   ClientSignup: undefined;
-  // Profile: { workerId: number };
+  Profile: undefined;
 }
 
 export type SplashProps = StackScreenProps<RootStackParamList, 'Splash'>;
@@ -19,8 +19,9 @@ export type LoginProps = StackScreenProps<RootStackParamList, 'Login'>;
 export type SearchProps = RouteProp<RootStackParamList, 'Search'>;
 export type WorkerProfileProps = RouteProp<RootStackParamList, 'WorkerProfile'>
 export type ReviewScreenRouteProp = RouteProp<RootStackParamList, 'Review'>;
-
-// export type ProfileProps = RouteProp<RootStackParamList, 'Profile'>
+export type ClientSignupProps = StackScreenProps<RootStackParamList, 'ClientSignup'>;
+export type WorkerSignupProps = StackScreenProps<RootStackParamList, 'WorkerSignup'>;
+export type ProfileProps = RouteProp<RootStackParamList, 'Profile'>
 
 export const API_URL = 'http://localhost:3003/';
 
