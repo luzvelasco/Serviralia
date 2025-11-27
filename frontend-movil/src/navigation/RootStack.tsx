@@ -12,7 +12,7 @@ const RootStack = createStackNavigator();
 
 export default function RootNavigator() {
     return (
-        <RootStack.Navigator >
+        <RootStack.Navigator>
             <RootStack.Screen
                 name="Splash"
                 component={Splash}

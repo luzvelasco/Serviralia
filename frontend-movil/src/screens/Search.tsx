@@ -109,24 +109,31 @@ export default function Search() {
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: 'white' }} contentContainerStyle={{ paddingBottom: 40 }}>
-        <Image
-            style={{ width: '100%', height: 150 }}
-            source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }}
-        />
-
-        <Text style={styles.title}>
-            {skillName}
-        </Text>
-
-        {error ? (
-            <Text style={styles.errorMessage}>{error}</Text>
-        ) : (
-            <ProfileCardList
-                Profiles={profiles}
-                onProfilePress={handleWorkerSelection}
+            <Text>
+                Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto
+            </Text>
+            <Image
+                style={{ width: '100%', height: 150 }}
+                source={{ uri: API_URL + '/backgrounds/' + skillId + '.png' }}
             />
-        )}
-    </ScrollView>
+
+            <Text style={styles.title}>
+                {skillName}
+            </Text>
+
+            {error ? (
+                <Text style={styles.errorMessage}>{error}</Text>
+            ) : (
+                <ProfileCardList
+                    Profiles={profiles}
+                    onProfilePress={handleWorkerSelection}
+                />
+            )}
+
+            <Text>
+                Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto Texto {'\n'} texto
+            </Text>
+        </ScrollView>
     )
 }
 

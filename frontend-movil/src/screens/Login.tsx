@@ -1,22 +1,35 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LoginProps } from "../types/navigation";
-import { Inter_400Regular, Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
 
 export default function Login({ navigation }: LoginProps) {
 
-    let [fontsLoaded] = useFonts({
-        Inter_400Regular
-    })
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     // para similar el remember me
     const [rememberMe, setRememberMe] = useState(false);
 
-    // para simular el login y navegar a la pantalla splash
     const handleLogin = () => {
+
+        // if (!email || !password) {
+        //     Alert.alert("Error de Inicio de Sesión", "Por favor, introduce tu correo y contraseña.");
+        //     return;
+        // }
+
+        // console.log(`Intentando iniciar sesión con Email: ${email} y Contraseña: ${password}`);
         navigation.replace('MainTabs');
     };
+
+    const handleClientSignup = () => {
+        navigation.navigate('ClientSignup');
+    };
+
+    const handleWorkerSignup = () => {
+        navigation.navigate('WorkerSignup');
+    };
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -34,11 +47,20 @@ export default function Login({ navigation }: LoginProps) {
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={[styles.input, styles.inputEmail]}
-                        placeholder="Correo electrónico">
+                        placeholder="Correo electrónico"
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                    >
                     </TextInput>
                     <TextInput
                         style={styles.input}
-                        placeholder="Contraseña">
+                        placeholder="Contraseña"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={true}
+                    >
                     </TextInput>
                 </View>
 
@@ -48,26 +70,43 @@ export default function Login({ navigation }: LoginProps) {
                         style={styles.rememberMe}
                         onPress={() => setRememberMe(!rememberMe)}>
                         <View style={[styles.checkbox, { backgroundColor: rememberMe ? '#2A5C8C' : '#D9D9D9' }]} />
-                        <Text style={styles.rememberMeText}>Recuérdame</Text>
+                        <Text style={styles.rememberMeText}>
+                            Recuérdame
+                        </Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity
                     style={styles.loginButton}
                     onPress={handleLogin}>
-                    <Text style={styles.loginButtonText}>Entrar</Text>
+                    <Text style={styles.loginButtonText}>
+                        Entrar
+                    </Text>
                 </TouchableOpacity>
 
                 <View style={styles.dividerContainer}>
                     <View style={styles.dividerLine} />
-                    <Text style={styles.dividerText}>O crear una cuenta</Text>
+                    <Text style={styles.dividerText}>
+                        O crear una cuenta
+
+                    </Text>
                     <View style={styles.dividerLine} />
                 </View>
                 <View style={styles.roleButtonContainer}>
-                    <TouchableOpacity style={styles.roleButton}>
-                        <Text style={styles.roleButtonText}>Cliente</Text>
+                    <TouchableOpacity
+                        style={styles.roleButton}
+                        onPress={handleClientSignup}
+                    >
+                        <Text style={styles.roleButtonText}>
+                            Cliente
+
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.roleButton}>
-                        <Text style={styles.roleButtonText}>Trabajador</Text>
+                    <TouchableOpacity
+                        style={styles.roleButton}
+                        onPress={handleWorkerSignup}>
+                        <Text style={styles.roleButtonText}>
+                            Trabajador
+                        </Text>
                     </TouchableOpacity>
                 </View>
 

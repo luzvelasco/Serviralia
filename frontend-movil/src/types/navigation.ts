@@ -9,6 +9,8 @@ export type RootStackParamList = {
   Search: { skillId: number };
   WorkerProfile: { workerId: number };
   Review: { workerId: number, workerSkills: string[]};
+  WorkerSignup: undefined;
+  ClientSignup: undefined;
   // Profile: { workerId: number };
 }
 
